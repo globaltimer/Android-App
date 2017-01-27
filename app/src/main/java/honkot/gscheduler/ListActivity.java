@@ -22,6 +22,8 @@ import honkot.gscheduler.model.OrmaDatabase;
 
 public class ListActivity extends AppCompatActivity {
 
+
+
     ListView listView;
     ArrayAdapter<CompareLocale> adapter;
     ArrayList<CompareLocale> worldTimes = new ArrayList<>();
