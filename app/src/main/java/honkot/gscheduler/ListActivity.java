@@ -44,9 +44,6 @@ public class ListActivity extends AppCompatActivity {
                 .build();
         CompareLocaleDao compareLocaleDao = new CompareLocaleDao(orma);
         worldTimes = (ArrayList<CompareLocale>)compareLocaleDao.findAll().toList();
-//        worldTimes.add(new Times("Tokyo", "08:00", "AM", "Dec 20th 2017", false));
-//        worldTimes.add(new Times("Berlin", "08:00", "AM", "Dec 20th 2017", false));
-
 
         listView = (ListView) findViewById(R.id.listView);
         adapter = new MyAdaptor(
@@ -81,9 +78,9 @@ public class ListActivity extends AppCompatActivity {
                 view = convertView;
             }
 
-            TextView cityTextView = (TextView)view.findViewById(R.id.text1);
-            TextView dateTextView = (TextView)view.findViewById(R.id.text2);
-            TextView timeTextView = (TextView)view.findViewById(R.id.text3);
+            TextView cityTextView = (TextView)view.findViewById(R.id.cityTextView);
+            TextView dateTextView = (TextView)view.findViewById(R.id.dateTextView);
+            TextView timeTextView = (TextView)view.findViewById(R.id.timeTextView);
 
 
             cityTextView.setText(getItem(position). getDisplayName());

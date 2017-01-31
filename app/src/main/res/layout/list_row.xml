@@ -17,7 +17,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <TextView android:id="@+id/text1"
+        <TextView android:id="@+id/cityTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="6dip"
@@ -26,7 +26,7 @@
             android:layout_weight="1"
             android:textSize="24sp" />
 
-        <TextView android:id="@+id/text2"
+        <TextView android:id="@+id/dateTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@android:id/text1"
@@ -41,7 +41,7 @@
         android:text="08:00"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:id="@+id/text3"
+        android:id="@+id/timeTextView"
         android:layout_weight="6.72"
         android:typeface="sans"
         android:textSize="36sp"

@@ -11,9 +11,7 @@ import honkot.gscheduler.model.CompareLocale_Relation;
 import honkot.gscheduler.model.CompareLocale_Selector;
 import honkot.gscheduler.model.OrmaDatabase;
 
-/**
- * Created by hiroki on 2016-11-25.
- */
+
 @Singleton
 public class CompareLocaleDao {
     OrmaDatabase orma;
