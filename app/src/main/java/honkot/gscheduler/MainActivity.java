@@ -1,27 +1,31 @@
 package honkot.gscheduler;
 
-import android.os.Bundle;
+import android.database.DataSetObserver;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.github.gfx.android.orma.AccessThreadConstraint;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
 
+import honkot.gscheduler.adapter.LocaleAdapter;
 import honkot.gscheduler.dao.CompareLocaleDao;
+import honkot.gscheduler.dao.CompareLocaleDao_Factory;
 import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.OrmaDatabase;
 import honkot.gscheduler.utils.AdapterGenerater;
-
-//import honkot.gscheduler.adapter.LocaleAdapter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
