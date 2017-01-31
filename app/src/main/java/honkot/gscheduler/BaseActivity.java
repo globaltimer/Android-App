@@ -2,6 +2,7 @@ package honkot.gscheduler;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
@@ -9,10 +10,19 @@ import honkot.gscheduler.di.AppComponent;
 
 public class BaseActivity extends AppCompatActivity {
     private AppComponent activityComponent;
+    private boolean calledUpdateActionBar = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!calledUpdateActionBar) {
+            updateActionBar(null, null);
+        }
     }
 
     @NonNull
@@ -24,37 +34,22 @@ public class BaseActivity extends AppCompatActivity {
         return activityComponent;
     }
 
-    public void updateActionBar(String title) {
-//        int stringId = getApplicationInfo().labelRes;
-//        String name = getString(stringId);
-//        if (title != null) {
-//            setTitle(title);
-//        } else {
-//            setTitle(name);
-//        }
-//
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            if (this instanceof GoBackToHomeInterface) {
-//                actionBar.setDisplayHomeAsUpEnabled(((GoBackToHomeInterface) this).shouldShowGoBackButton());
-//                actionBar.setHomeAsUpIndicator(R.drawable.ic_home_white_24dp);
-//            } else {
-//                actionBar.setDisplayHomeAsUpEnabled(false);
-//            }
-//
-//            Session session = SessionManager.getInstance().getSession();
-//            if (session == null) {
-//                actionBar.setSubtitle(null);
-//                actionBar.setDisplayShowHomeEnabled(false);
-//            } else {
-//                String userAccount = session.getUserAccount();
-//                Company company = sessionDao.findCompany(session);
-//                String companyName = company == null ? "" : company.getName();
-//                actionBar.setSubtitle(userAccount + " @ " + companyName);
-//
-//                actionBar.setDisplayShowHomeEnabled(true);
-//            }
-//        }
+    public void updateActionBar(String title, String subTitle) {
+        calledUpdateActionBar = true;
+
+        int stringId = getApplicationInfo().labelRes;
+        String name = getString(stringId);
+        if (title != null) {
+            setTitle(title);
+        } else {
+            setTitle(name);
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // setSubtitleはNullを許容する
+            actionBar.setSubtitle(subTitle);
+        }
     }
 
     @Override
