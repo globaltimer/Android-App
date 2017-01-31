@@ -7,53 +7,53 @@
             type="honkot.gscheduler.model.CompareLocale" />
     </data>
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="100dip"
-    android:padding="20sp"
-    android:paddingTop="2dip"
-    android:paddingBottom="2dip"
-    android:id="@+id/listRow"
-    android:baselineAligned="true"
-    android:background="@drawable/border">
-
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="239dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:padding="20sp"
+        android:paddingTop="2dip"
+        android:paddingBottom="2dip"
+        android:id="@+id/listRow"
+        android:baselineAligned="true"
+        android:background="@drawable/border">
 
-        <TextView android:id="@+id/cityTextView"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="239dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="6dip"
-            android:layout_weight="1"
-            android:textSize="24sp"
-            android:text="@{compareLocale.getDisplayCity()}"/>
+            android:layout_weight="1">
 
-        <TextView android:id="@+id/dateTextView"
-            android:layout_width="match_parent"
+            <TextView android:id="@+id/cityTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="6dip"
+                android:layout_weight="1"
+                android:textSize="24sp"
+                android:text="@{compareLocale.getDisplayCity()}"/>
+
+            <TextView android:id="@+id/dateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@android:id/text1"
+                android:layout_alignStart="@android:id/text1"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_alignLeft="@android:id/text1"
+                android:layout_weight="1"
+                android:text="@{compareLocale.getDisplayDate()}"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_below="@android:id/text1"
-            android:layout_alignStart="@android:id/text1"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:layout_alignLeft="@android:id/text1"
-            android:layout_weight="1"
-            android:text="@{compareLocale.getDisplayDate()}"/>
+            android:id="@+id/timeTextView"
+            android:layout_weight="6.72"
+            android:typeface="sans"
+            android:textSize="36sp"
+            android:lineSpacingExtra="10sp"
+            android:textColor="#017e86"
+            android:gravity="right"
+            android:text="@{compareLocale.getDisplayTime()}"/>
+
     </LinearLayout>
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:id="@+id/timeTextView"
-        android:layout_weight="6.72"
-        android:typeface="sans"
-        android:textSize="36sp"
-        android:lineSpacingExtra="10sp"
-        android:textColor="#017e86"
-        android:gravity="right"
-        android:text="@{compareLocale.getDisplayTime()}"/>
-
-</LinearLayout>
 
 </layout>
