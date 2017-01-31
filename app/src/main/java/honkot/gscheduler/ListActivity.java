@@ -1,6 +1,7 @@
 package honkot.gscheduler;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import honkot.gscheduler.dao.CompareLocaleDao;
+import honkot.gscheduler.databinding.ListRowBinding;
 import honkot.gscheduler.model.CompareLocale;
 
 public class ListActivity extends BaseActivity {
@@ -43,7 +44,6 @@ public class ListActivity extends BaseActivity {
         adapter = new MyAdaptor(
                 this,
                 R.layout.list_row,
-                android.R.id.text1,
                 worldTimes
         );
 
@@ -55,39 +55,28 @@ public class ListActivity extends BaseActivity {
     private class MyAdaptor extends ArrayAdapter<CompareLocale> implements AdapterView.OnItemClickListener{
 
 
-        public MyAdaptor(Context context, int resource, int row, ArrayList<CompareLocale> objects) {
-            super(context, resource, row, objects);
+        public MyAdaptor(Context context, int resource, ArrayList<CompareLocale> objects) {
+            super(context, resource, objects);
         }
-
 
         @NonNull
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-//            View view = super.getView(position, convertView, parent);
-
-            View view;
+            ListRowBinding binding;
             if (convertView == null) {
-                view = getLayoutInflater().inflate(R.layout.list_row, parent, false);
+                binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.list_row, parent, false);
             } else {
-                view = convertView;
+                binding = DataBindingUtil.getBinding(convertView);
             }
 
-            TextView cityTextView = (TextView)view.findViewById(R.id.cityTextView);
-            TextView dateTextView = (TextView)view.findViewById(R.id.dateTextView);
-            TextView timeTextView = (TextView)view.findViewById(R.id.timeTextView);
-
-
-            cityTextView.setText(getItem(position). getDisplayName());
-            dateTextView.setText(getItem(position).getGMT());
-            timeTextView.setText(Integer.toString(getItem(position).getOffset()));
-
+            binding.setCompareLocale(getItem(position));
 
 //            Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
 //                    "fonts/Baloo-Regular.ttf");
 //
 //            cityTextView.setTypeface(tf);
 
-            return view;
+            return binding.getRoot();
         }
 
         @Override
@@ -97,7 +86,5 @@ public class ListActivity extends BaseActivity {
             //ここで時間とか、listviewの中にあるものを表示させることもできる。
         }
     }
-
-
 
 }

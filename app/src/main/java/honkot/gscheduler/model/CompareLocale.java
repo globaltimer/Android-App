@@ -64,4 +64,8 @@ public class CompareLocale {
     public void setOffset(int offset) {
         this.offset = offset;
     }
+
+    public String getDisplayCity() { return getDisplayName();}
+    public String getDisplayDate() { return GMT;}
+    public String getDisplayTime() { return id;}
 }
