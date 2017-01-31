@@ -1,13 +1,10 @@
 package honkot.gscheduler;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.github.gfx.android.orma.AccessThreadConstraint;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -18,22 +15,17 @@ import javax.inject.Inject;
 
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.model.CompareLocale;
-import honkot.gscheduler.model.OrmaDatabase;
 import honkot.gscheduler.utils.AdapterGenerater;
 
-//import honkot.gscheduler.adapter.LocaleAdapter;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Inject
     CompareLocaleDao compareLocaleDao;
 
-    @Inject
-    OrmaDatabase orma;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getComponent().inject(this);
         setContentView(R.layout.activity_main);
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -41,11 +33,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.insert).setOnClickListener(this);
         findViewById(R.id.delete).setOnClickListener(this);
-
-        orma = OrmaDatabase.builder(this)
-                .writeOnMainThread(BuildConfig.DEBUG ? AccessThreadConstraint.WARNING : AccessThreadConstraint.NONE)
-                .build();
-        compareLocaleDao = new CompareLocaleDao(orma);
 
         TextView tv = (TextView)findViewById(R.id.result);
         tv.setText(TimeZone.getDefault().getDisplayName() + ":" + TimeZone.getDefault().getID() + ":" + getGMT(TimeZone.getDefault()));

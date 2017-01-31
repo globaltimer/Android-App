@@ -5,6 +5,7 @@
     tools:overrideLibrary="com.github.gfx.android.orma">
 
     <application
+        android:name=".GlobalTimerApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
