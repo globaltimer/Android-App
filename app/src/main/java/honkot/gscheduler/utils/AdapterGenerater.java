@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import honkot.gscheduler.R;
-//import honkot.gscheduler.adapter.LocaleAdapter;
+import honkot.gscheduler.adapter.LocaleAdapter;
 
 /**
  * copied from AndroidOS. < ZonePicker.java
