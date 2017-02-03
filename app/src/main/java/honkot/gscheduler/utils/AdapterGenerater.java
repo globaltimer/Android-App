@@ -26,6 +26,35 @@ public class AdapterGenerater {
         return constructTimezoneAdapter(context, sortedByName, android.R.layout.simple_list_item_2);
     }
 
+    public static int getPositionByGMTId(Context context, String id) {
+        int ret = 0;
+        for (HashMap<String, Object> map : getZones(context)) {
+            if ((map.get(KEY_ID)).equals(id)) {
+                return ret;
+            }
+            ret++;
+        }
+
+        return 0;
+    }
+
+    /**
+     * １つのGMTには複数のIDが割り振られている可能性があるが、
+     * 先頭のものを暫定IDとして返す
+     * @param context
+     * @param gmt
+     * @return
+     */
+    public static String getIdByGMT(Context context, String gmt) {
+        for (HashMap<String, Object> map : getZones(context)) {
+            if ((map.get(KEY_GMT)).equals(gmt)) {
+                return (String)map.get(KEY_ID);
+            }
+        }
+
+        return "";
+    }
+
     /* ------ copied from AndroidOS ------- */
     private static final String XMLTAG_TIMEZONE = "timezone";
     private static final String KEY_ID = "id";  // value: String

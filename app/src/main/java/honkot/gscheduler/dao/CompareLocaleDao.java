@@ -11,7 +11,6 @@ import honkot.gscheduler.model.CompareLocale_Relation;
 import honkot.gscheduler.model.CompareLocale_Selector;
 import honkot.gscheduler.model.OrmaDatabase;
 
-
 @Singleton
 public class CompareLocaleDao {
     OrmaDatabase orma;
@@ -26,8 +25,8 @@ public class CompareLocaleDao {
     }
 
     @Nullable
-    public CompareLocale findById(String id) {
-        return relation().selector().idEq(id).getOrNull(0);
+    public CompareLocale findById(long id) {
+        return relation().selector().idEq(id).valueOrNull();
     }
 
     public CompareLocale_Selector findAll() {
@@ -35,14 +34,12 @@ public class CompareLocaleDao {
     }
 
     public void insert(final CompareLocale favorite) {
-        if (findById(favorite.id) == null) {
-            orma.transactionSync(new Runnable() {
-                @Override
-                public void run() {
-                    orma.insertIntoCompareLocale(favorite);
-                }
-            });
-        }
+        orma.transactionSync(new Runnable() {
+            @Override
+            public void run() {
+                orma.insertIntoCompareLocale(favorite);
+            }
+        });
     }
 
     public void remove(final CompareLocale favorite) {
@@ -50,24 +47,22 @@ public class CompareLocaleDao {
             @Override
             public void run() {
                 CompareLocale_Deleter deleter = relation().deleter();
-                deleter.idEq(favorite.id).execute();
+                deleter.idEq(favorite.getId()).execute();
             }
         });
     }
 
-    /**
-     * Does not be used. just practice.
-     * @param favorite
-     */
     public void update(final CompareLocale favorite) {
         orma.transactionSync(new Runnable() {
             @Override
             public void run() {
                 orma.updateCompareLocale()
-                        .idEq(favorite.id)
-                        .displayName(favorite.displayName)
-                        .GMT(favorite.GMT)
-                        .offset(favorite.offset)
+                        .idEq(favorite.getId())
+                        .basis(favorite.isBasis())
+                        .gmtId(favorite.getGmtId())
+                        .taskName(favorite.getTaskName())
+                        .locationName(favorite.getLocationName())
+                        .zonedDateTime(favorite.getZonedDateTime())
                         .execute();
             }
         });
