@@ -23,7 +23,11 @@ public class TimeFormatUtil {
             name.append('+');
         }
 
-        name.append(p / (HOURS_1));
+        int hour = p / (HOURS_1);
+        if (hour < 10) {
+            name.append('0');
+        }
+        name.append(hour);
         name.append(':');
 
         int min = p / 60000;
