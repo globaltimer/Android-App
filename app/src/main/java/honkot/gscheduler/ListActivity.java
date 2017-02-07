@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -81,7 +80,7 @@ public class ListActivity extends BaseActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Toast.makeText(getApplicationContext(), getItem(position).getGMT(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), getItem(position).getGMT(), Toast.LENGTH_LONG).show();
 
             //ここで時間とか、listviewの中にあるものを表示させることもできる。
         }
