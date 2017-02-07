@@ -87,4 +87,6 @@ public class ListActivity extends BaseActivity {
         }
     }
 
+    //TODO menuからMainActivityにとばしてください
+
 }

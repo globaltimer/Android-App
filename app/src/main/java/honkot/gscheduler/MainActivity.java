@@ -2,6 +2,8 @@ package honkot.gscheduler;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -110,5 +112,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             buf.append("### " + favorite.displayName + ":" + favorite.GMT + ":" + favorite.id);
         }
         tv.setText(buf.toString());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_list,menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }
