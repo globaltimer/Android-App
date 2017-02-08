@@ -4,7 +4,7 @@
     <data>
         <variable
             name="compareLocale"
-            type="honkot.gscheduler.model.CompareLocale" />
+            type="honkot.gscheduler.model.ListBindingInterface" />
     </data>
 
     <LinearLayout

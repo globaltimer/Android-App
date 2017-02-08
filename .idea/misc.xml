@@ -34,6 +34,12 @@
     <OptionsSetting value="true" id="Update" />
     <OptionsSetting value="true" id="Status" />
     <OptionsSetting value="true" id="Edit" />
+    <OptionsSetting value="true" id="追加" />
+    <OptionsSetting value="true" id="削除" />
+    <OptionsSetting value="true" id="チェックアウト" />
+    <OptionsSetting value="true" id="アップデート" />
+    <OptionsSetting value="true" id="ステータス" />
+    <OptionsSetting value="true" id="編集" />
     <ConfirmationsSetting value="0" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
@@ -45,8 +51,9 @@
   </component>
   <component name="masterDetails">
     <states>
-      <state key="ScopeChooserConfigurable.UI">
+      <state key="ProjectJDKs.UI">
         <settings>
+          <last-edited>1.8</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
