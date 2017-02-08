@@ -1,24 +1,33 @@
 package honkot.gscheduler;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.SearchView;
+
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 
+import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.dao.TmpTimeZoneDao;
 import honkot.gscheduler.databinding.ActivityAddCompareLocaleBinding;
 import honkot.gscheduler.databinding.ListRowBinding;
+import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.TmpTimeZone;
 import honkot.gscheduler.model.TmpTimeZone_Selector;
 import honkot.gscheduler.utils.AdapterGenerater;
+import honkot.gscheduler.utils.Debug;
 
 public class AddCompareLocaleActivity extends BaseActivity {
 
@@ -27,6 +36,9 @@ public class AddCompareLocaleActivity extends BaseActivity {
 
     @Inject
     TmpTimeZoneDao tmpTimeZoneDao;
+
+    @Inject
+    CompareLocaleDao compareLocaleDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +49,7 @@ public class AddCompareLocaleActivity extends BaseActivity {
         mAdapter = new CustomAdapter();
         mAdapter.initialize();
         mBinding.listView.setAdapter(mAdapter);
+        mBinding.listView.setOnItemClickListener(mAdapter);
         mBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -51,7 +64,7 @@ public class AddCompareLocaleActivity extends BaseActivity {
         });
     }
 
-    private class CustomAdapter extends BaseAdapter {
+    private class CustomAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
 
         TmpTimeZone_Selector selector;
 
@@ -112,6 +125,22 @@ public class AddCompareLocaleActivity extends BaseActivity {
         @Override
         public int getCount() {
             return selector.count();
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            TmpTimeZone tmpTimeZone = getItem(position);
+            CompareLocale locale = new CompareLocale(getApplicationContext());
+            locale.setLocationName(tmpTimeZone.getName());
+            locale.setGmtId(tmpTimeZone.getLocaleId());
+            ZonedDateTime newOne = locale.getZonedDateTime().withZoneSameInstant(ZoneId.of(tmpTimeZone.getGmt()));
+            locale.setZonedDateTime(newOne);
+
+            compareLocaleDao.insert(locale);
+
+            //TODO 消す
+            startActivity(new Intent(getApplicationContext(), ListActivity.class));
+            finish();
         }
     }
 }

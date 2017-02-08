@@ -6,6 +6,10 @@
         android:layout_height="match_parent">
         <SearchView
             android:id="@+id/searchView"
+            android:background="@drawable/search_bg"
+            android:layout_margin="@dimen/searchView_margin"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <ListView

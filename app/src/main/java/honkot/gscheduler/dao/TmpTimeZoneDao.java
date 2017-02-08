@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 import honkot.gscheduler.model.OrmaDatabase;
 import honkot.gscheduler.model.TmpTimeZone;
 import honkot.gscheduler.model.TmpTimeZone_Relation;
+import honkot.gscheduler.model.TmpTimeZone_Schema;
 import honkot.gscheduler.model.TmpTimeZone_Selector;
 
 @Singleton
@@ -33,7 +34,8 @@ public class TmpTimeZoneDao {
     }
 
     public TmpTimeZone_Selector likeQuery(String query) {
-        return relation().selector().where("name LIKE ?", "%" + query + "%");
+        return relation().selector().where(
+                TmpTimeZone_Schema.INSTANCE.name.getEscapedName() + " LIKE ?", "%" + query + "%");
     }
 
     public TmpTimeZone_Selector findAll() {
