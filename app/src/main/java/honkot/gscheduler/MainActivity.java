@@ -40,6 +40,7 @@ public class MainActivity extends BaseActivity
     private boolean isDebug = true;
 
     public static final String EXTRA_ID = "EXTRA_ID";
+    private static final String TAG = "MAIN_ACTIVITY";
 
     @Inject
     CompareLocaleDao compareLocaleDao;
@@ -75,7 +76,10 @@ public class MainActivity extends BaseActivity
         updateDisplayInfo();
         updateButtonState();
         printAll();
+
     }
+
+
 
     private void updateDisplayInfo() {
         binding.gmtSpinner.setSelection(AdapterGenerater.getPositionByGMTId(
@@ -278,6 +282,8 @@ public class MainActivity extends BaseActivity
         updateDisplayInfo();
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -291,5 +297,8 @@ public class MainActivity extends BaseActivity
         Intent intent = new Intent(getApplicationContext(), ListActivity.class);
         startActivity(intent);
         return super.onOptionsItemSelected(item);
+
     }
+
+
 }

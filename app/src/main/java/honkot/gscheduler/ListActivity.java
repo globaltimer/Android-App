@@ -4,6 +4,10 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +24,7 @@ import honkot.gscheduler.model.CompareLocale;
 
 public class ListActivity extends BaseActivity {
 
+    private static final String TAG = "LIST_ACTIVITY";
     @Inject
     CompareLocaleDao compareLocaleDao;
 
@@ -32,7 +37,7 @@ public class ListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getComponent().inject(this);
         setContentView(R.layout.activity_list);
-
+//        showActionBar();
         initView();
     }
 
@@ -85,5 +90,63 @@ public class ListActivity extends BaseActivity {
             //ここで時間とか、listviewの中にあるものを表示させることもできる。
         }
     }
+
+
+//    private void showActionBar() {
+//        LayoutInflater actionBarInflator = (LayoutInflater) this
+//                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View v = actionBarInflator.inflate(R.layout.menu, null);
+//        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(false);
+//        actionBar.setDisplayShowHomeEnabled (false);
+//        actionBar.setDisplayShowCustomEnabled(true);
+//        actionBar.setDisplayShowTitleEnabled(false);
+//        actionBar.setCustomView(v);
+//
+//        v.findViewById(R.id.edit_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i(TAG, "onClick: YAY");
+//            }
+//        });
+//
+//        v.findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i(TAG, "onClick: YAY2");
+//            }
+//        });
+//    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Log.i(TAG, "onOptionsItemSelected: ");
+                return true;
+
+            case R.id.action_edit:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+
 
 }
