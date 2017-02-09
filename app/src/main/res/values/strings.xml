@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">GScheduler</string>
-
-    <string name="search">SEARCH</string>
+  <string name="app_name">Global Clock</string>
+  <string name="search">SEARCH</string>
 </resources>

@@ -1,89 +1,77 @@
 package honkot.gscheduler;
 
-import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import honkot.gscheduler.dao.CompareLocaleDao;
-import honkot.gscheduler.databinding.ListRowBinding;
 import honkot.gscheduler.model.CompareLocale;
 
 public class ListActivity extends BaseActivity {
 
+    private static final String TAG = "LIST_ACTIVITY";
     @Inject
     CompareLocaleDao compareLocaleDao;
-
-    ListView listView;
-    ArrayAdapter<CompareLocale> adapter;
-    ArrayList<CompareLocale> worldTimes = new ArrayList<>();
+    ArrayList<CompareLocale> worldTimes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getComponent().inject(this);
         setContentView(R.layout.activity_list);
-
         initView();
     }
 
     private void initView() {
-        worldTimes = (ArrayList<CompareLocale>)compareLocaleDao.findAll().toList();
 
-        listView = (ListView) findViewById(R.id.listView);
-        adapter = new MyAdaptor(
-                this,
-                R.layout.list_row,
-                worldTimes
-        );
+        worldTimes = new ArrayList<>(compareLocaleDao.findAll().toList());
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener((AdapterView.OnItemClickListener)adapter);
+        MyRecAdapter myAdapter = new MyRecAdapter(worldTimes);
+        recyclerView.setAdapter(myAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
 
     }
 
-    private class MyAdaptor extends ArrayAdapter<CompareLocale> implements AdapterView.OnItemClickListener{
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
 
 
-        public MyAdaptor(Context context, int resource, ArrayList<CompareLocale> objects) {
-            super(context, resource, objects);
-        }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Log.i(TAG, "onOptionsItemSelected: ");
+                return true;
 
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ListRowBinding binding;
-            if (convertView == null) {
-                binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.list_row, parent, false);
-            } else {
-                binding = DataBindingUtil.getBinding(convertView);
-            }
+            case R.id.action_edit:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
 
-            binding.setCompareLocale(getItem(position));
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
 
-//            Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-//                    "fonts/Baloo-Regular.ttf");
-//
-//            cityTextView.setTypeface(tf);
-
-            return binding.getRoot();
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            Toast.makeText(getApplicationContext(), getItem(position).getGMT(), Toast.LENGTH_LONG).show();
-
-            //ここで時間とか、listviewの中にあるものを表示させることもできる。
         }
     }
+
+
 
 }
