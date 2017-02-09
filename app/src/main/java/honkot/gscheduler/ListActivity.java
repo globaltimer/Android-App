@@ -10,8 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
 import javax.inject.Inject;
 
 import honkot.gscheduler.dao.CompareLocaleDao;
@@ -25,7 +23,6 @@ public class ListActivity extends BaseActivity {
 
     @Inject
     CompareLocaleDao compareLocaleDao;
-    ArrayList<CompareLocale> worldTimes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,19 +36,17 @@ public class ListActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_SUCCESS) {
             RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
-            ((MyRecAdapter)recyclerView.getAdapter()).setData(
-                    (ArrayList<CompareLocale>)compareLocaleDao.findAll().toList());
+            ((MyRecAdapter)recyclerView.getAdapter()).setData(compareLocaleDao.findAll());
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initView() {
 
-        worldTimes = new ArrayList<>(compareLocaleDao.findAll().toList());
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        MyRecAdapter myAdapter = new MyRecAdapter(worldTimes, new MyRecAdapter.OnItemClickListener() {
+        MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
                 Intent intent = new Intent(ListActivity.this, MainActivity.class);
@@ -91,7 +86,4 @@ public class ListActivity extends BaseActivity {
 
         }
     }
-
-
-
 }
