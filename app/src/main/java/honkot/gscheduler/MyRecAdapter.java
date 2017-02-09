@@ -4,65 +4,74 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import honkot.gscheduler.databinding.ListRowBinding;
 import honkot.gscheduler.model.CompareLocale;
 
 /**
  * Created by ayako_sayama on 2017/02/08.
  */
-public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.ViewHolder> {
+public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
+    private ArrayList<CompareLocale> mData;
+    private OnItemClickListener mListener;
 
-    public ArrayList<CompareLocale> compareLocale;
-
-    public MyRecAdapter(ArrayList<CompareLocale> compareLocale) {
-        this.compareLocale = compareLocale;
+    public MyRecAdapter(ArrayList<CompareLocale> compareLocale, OnItemClickListener listener) {
+        mListener = listener;
+        mData = compareLocale;
     }
 
-//    public MyRecAdapter  r(Context applicationContext, int list_row, ArrayList<CompareLocale> worldTimes) {
-//    }
+    public void setData(ArrayList<CompareLocale> compareLocale) {
+        mData = compareLocale;
+        notifyDataSetChanged();
+    }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row, parent, false);
-        RecyclerView.ViewHolder viewHolder = new ViewHolder(itemLayoutView);
-        return (ViewHolder) viewHolder;
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        ListRowBinding itemBinding = ListRowBinding.inflate(layoutInflater, parent, false);
+        return new MyViewHolder(itemBinding);
     }
 
-
     // inner class to hold a reference to each item of RecyclerView
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView txtViewDate;
-        public TextView txtViewTime;
-        public TextView txtViewCity;
+        private final ListRowBinding binding;
 
+        private MyViewHolder(ListRowBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+            this.binding.rowClickView.setOnClickListener(this);
+        }
 
-        public ViewHolder(View itemLayoutView) {
-            super(itemLayoutView);
-
-            txtViewDate = (TextView) itemLayoutView.findViewById(R.id.dateTextView);
-            txtViewTime = (TextView) itemLayoutView.findViewById(R.id.timeTextView);
-            txtViewCity = (TextView) itemLayoutView.findViewById(R.id.cityTextView);
+        @Override
+        public void onClick(View view) {
+            if (mListener != null) {
+                mListener.onItemClicked(
+                        getItemForPosition(getLayoutPosition()));
+            }
         }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
-
-        viewHolder.txtViewDate.setText(compareLocale.get(position).getDisplayCity());
-        viewHolder.txtViewTime.setText(compareLocale.get(position).getDisplayTime());
-        viewHolder.txtViewDate.setText(compareLocale.get(position).getDisplayDate());
-
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        CompareLocale item = getItemForPosition(position);
+        holder.binding.setCompareLocale(item);
     }
 
     @Override
     public int getItemCount() {
-        return compareLocale.size();
+        return mData.size();
+    }
+
+    private CompareLocale getItemForPosition(int position) {
+        return mData.get(position);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(CompareLocale compareLocale);
     }
 
 }

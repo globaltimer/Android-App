@@ -34,7 +34,7 @@ public class CompareLocaleDao {
     }
 
     public void insert(final CompareLocale favorite) {
-        orma.transactionSync(new Runnable() {
+        orma.transactionNonExclusiveSync(new Runnable() {
             @Override
             public void run() {
                 orma.insertIntoCompareLocale(favorite);
@@ -43,7 +43,7 @@ public class CompareLocaleDao {
     }
 
     public void remove(final CompareLocale favorite) {
-        orma.transactionSync(new Runnable() {
+        orma.transactionNonExclusiveSync(new Runnable() {
             @Override
             public void run() {
                 CompareLocale_Deleter deleter = relation().deleter();
@@ -53,7 +53,7 @@ public class CompareLocaleDao {
     }
 
     public void update(final CompareLocale favorite) {
-        orma.transactionSync(new Runnable() {
+        orma.transactionNonExclusiveSync(new Runnable() {
             @Override
             public void run() {
                 orma.updateCompareLocale()

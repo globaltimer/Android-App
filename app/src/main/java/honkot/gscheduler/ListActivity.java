@@ -1,5 +1,6 @@
 package honkot.gscheduler;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,9 @@ import honkot.gscheduler.model.CompareLocale;
 public class ListActivity extends BaseActivity {
 
     private static final String TAG = "LIST_ACTIVITY";
+    private static final int REQUEST_CODE = 1;
+    public static final int RESULT_SUCCESS = 1;
+
     @Inject
     CompareLocaleDao compareLocaleDao;
     ArrayList<CompareLocale> worldTimes;
@@ -31,17 +35,32 @@ public class ListActivity extends BaseActivity {
         initView();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_SUCCESS) {
+            RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
+            ((MyRecAdapter)recyclerView.getAdapter()).setData(
+                    (ArrayList<CompareLocale>)compareLocaleDao.findAll().toList());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void initView() {
 
         worldTimes = new ArrayList<>(compareLocaleDao.findAll().toList());
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        MyRecAdapter myAdapter = new MyRecAdapter(worldTimes);
+        MyRecAdapter myAdapter = new MyRecAdapter(worldTimes, new MyRecAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(CompareLocale compareLocale) {
+                Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(myAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
     }
 
     @Override
@@ -51,12 +70,13 @@ public class ListActivity extends BaseActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add:
                 Log.i(TAG, "onOptionsItemSelected: ");
+                Intent intent = new Intent(ListActivity.this, AddCompareLocaleActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
                 return true;
 
             case R.id.action_edit:
