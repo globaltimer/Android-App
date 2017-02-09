@@ -14,16 +14,16 @@ import honkot.gscheduler.model.CompareLocale_Selector;
  */
 public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
-    private CompareLocale_Selector mSelector;
-    private OnItemClickListener mListener;
+    private CompareLocale_Selector selector;
+    private OnItemClickListener listener;
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener) {
-        mListener = listener;
-        mSelector = selector;
+        this.listener = listener;
+        this.selector = selector;
     }
 
-    public void setData(CompareLocale_Selector selector) {
-        mSelector = selector;
+    public void setDataAndUpdateList(CompareLocale_Selector selector) {
+        this.selector = selector;
         notifyDataSetChanged();
     }
 
@@ -47,8 +47,8 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
         @Override
         public void onClick(View view) {
-            if (mListener != null) {
-                mListener.onItemClicked(
+            if (listener != null) {
+                listener.onItemClicked(
                         getItemForPosition(getLayoutPosition()));
             }
         }
@@ -62,11 +62,11 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-        return mSelector.count();
+        return selector.count();
     }
 
     private CompareLocale getItemForPosition(int position) {
-        return mSelector.get(position);
+        return selector.get(position);
     }
 
     public interface OnItemClickListener {
