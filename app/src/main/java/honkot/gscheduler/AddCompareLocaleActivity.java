@@ -28,8 +28,7 @@ import honkot.gscheduler.utils.AdapterGenerater;
 
 public class AddCompareLocaleActivity extends BaseActivity {
 
-    ActivityAddCompareLocaleBinding mBinding;
-    CustomAdapter mAdapter;
+    ActivityAddCompareLocaleBinding binding;
 
     @Inject
     TmpTimeZoneDao tmpTimeZoneDao;
@@ -42,12 +41,12 @@ public class AddCompareLocaleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getComponent().inject(this);
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_compare_locale);
-        mAdapter = new CustomAdapter();
-        mAdapter.initialize();
-        mBinding.listView.setAdapter(mAdapter);
-        mBinding.listView.setOnItemClickListener(mAdapter);
-        mBinding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_compare_locale);
+        CustomAdapter adapter = new CustomAdapter();
+        adapter.initialize();
+        binding.listView.setAdapter(adapter);
+        binding.listView.setOnItemClickListener(adapter);
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -55,7 +54,8 @@ public class AddCompareLocaleActivity extends BaseActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mAdapter.search(newText);
+                CustomAdapter adapter = (CustomAdapter) binding.listView.getAdapter();
+                adapter.search(newText);
                 return true;
             }
         });
@@ -97,18 +97,18 @@ public class AddCompareLocaleActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ListRowBinding binding;
+            ListRowBinding tmpBinding;
             if (convertView == null) {
-                binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.list_row, parent, false);
-                binding.rowClickView.setFocusable(false);
-                binding.rowClickView.setClickable(false);
+                tmpBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.list_row, parent, false);
+                tmpBinding.rowClickView.setFocusable(false);
+                tmpBinding.rowClickView.setClickable(false);
             } else {
-                binding = DataBindingUtil.getBinding(convertView);
+                tmpBinding = DataBindingUtil.getBinding(convertView);
             }
 
-            binding.setCompareLocale(getItem(position));
+            tmpBinding.setCompareLocale(getItem(position));
 
-            return binding.getRoot();
+            return tmpBinding.getRoot();
         }
 
         @Override
@@ -128,6 +128,7 @@ public class AddCompareLocaleActivity extends BaseActivity {
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            // set locale.
             TmpTimeZone tmpTimeZone = getItem(position);
             CompareLocale locale = new CompareLocale(getApplicationContext());
             locale.setLocationName(tmpTimeZone.getName());

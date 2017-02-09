@@ -1,20 +1,19 @@
 package honkot.gscheduler;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
 import javax.inject.Inject;
 
 import honkot.gscheduler.dao.CompareLocaleDao;
+import honkot.gscheduler.databinding.ActivityListBinding;
 import honkot.gscheduler.model.CompareLocale;
 
 public class ListActivity extends BaseActivity {
@@ -22,36 +21,33 @@ public class ListActivity extends BaseActivity {
     private static final String TAG = "LIST_ACTIVITY";
     private static final int REQUEST_CODE = 1;
     public static final int RESULT_SUCCESS = 1;
+    private ActivityListBinding binding;
 
     @Inject
     CompareLocaleDao compareLocaleDao;
-    ArrayList<CompareLocale> worldTimes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getComponent().inject(this);
-        setContentView(R.layout.activity_list);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_list);
         initView();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_SUCCESS) {
-            RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
-            ((MyRecAdapter)recyclerView.getAdapter()).setData(
-                    (ArrayList<CompareLocale>)compareLocaleDao.findAll().toList());
+            MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+            adapter.setDataAndUpdateList(compareLocaleDao.findAll());
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initView() {
 
-        worldTimes = new ArrayList<>(compareLocaleDao.findAll().toList());
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        MyRecAdapter myAdapter = new MyRecAdapter(worldTimes, new MyRecAdapter.OnItemClickListener() {
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
                 Intent intent = new Intent(ListActivity.this, MainActivity.class);
@@ -59,8 +55,8 @@ public class ListActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-        recyclerView.setAdapter(myAdapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        binding.recyclerView.setAdapter(myAdapter);
+        binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -91,7 +87,4 @@ public class ListActivity extends BaseActivity {
 
         }
     }
-
-
-
 }
