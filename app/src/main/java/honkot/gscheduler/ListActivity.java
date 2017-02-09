@@ -22,6 +22,7 @@ public class ListActivity extends BaseActivity {
     @Inject
     CompareLocaleDao compareLocaleDao;
     ArrayList<CompareLocale> worldTimes;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +35,20 @@ public class ListActivity extends BaseActivity {
     private void initView() {
 
         worldTimes = new ArrayList<>(compareLocaleDao.findAll().toList());
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
+        recyclerView = (RecyclerView)findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         MyRecAdapter myAdapter = new MyRecAdapter(worldTimes);
         recyclerView.setAdapter(myAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        setUpItemTouchHelper();
 
     }
+
+    private void setUpItemTouchHelper(){
+
+    }
+    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -22,6 +22,8 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.ViewHolder> 
         this.compareLocale = compareLocale;
     }
 
+
+
 //    public MyRecAdapter  r(Context applicationContext, int list_row, ArrayList<CompareLocale> worldTimes) {
 //    }
 
@@ -64,5 +66,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.ViewHolder> 
     public int getItemCount() {
         return compareLocale.size();
     }
+
+
 
 }
