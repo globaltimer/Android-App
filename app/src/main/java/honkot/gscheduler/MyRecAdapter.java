@@ -2,6 +2,7 @@ package honkot.gscheduler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -15,8 +16,10 @@ import honkot.gscheduler.model.CompareLocale;
 public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
     private ArrayList<CompareLocale> mData;
+    private OnItemClickListener mListener;
 
-    public MyRecAdapter(ArrayList<CompareLocale> compareLocale) {
+    public MyRecAdapter(ArrayList<CompareLocale> compareLocale, OnItemClickListener listener) {
+        mListener = listener;
         mData = compareLocale;
     }
 
@@ -27,15 +30,23 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         return new MyViewHolder(itemBinding);
     }
 
-
     // inner class to hold a reference to each item of RecyclerView
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final ListRowBinding binding;
 
         private MyViewHolder(ListRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            this.binding.rowClickView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mListener != null) {
+                mListener.onItemClicked(
+                        getItemForPosition(getLayoutPosition()));
+            }
         }
     }
 
@@ -52,6 +63,10 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     private CompareLocale getItemForPosition(int position) {
         return mData.get(position);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(CompareLocale compareLocale);
     }
 
 }

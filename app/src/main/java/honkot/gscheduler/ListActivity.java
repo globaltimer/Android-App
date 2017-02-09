@@ -1,5 +1,6 @@
 package honkot.gscheduler;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,11 +38,16 @@ public class ListActivity extends BaseActivity {
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        MyRecAdapter myAdapter = new MyRecAdapter(worldTimes);
+        MyRecAdapter myAdapter = new MyRecAdapter(worldTimes, new MyRecAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(CompareLocale compareLocale) {
+                Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
+                startActivity(intent);
+            }
+        });
         recyclerView.setAdapter(myAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
     }
 
     @Override
@@ -51,12 +57,13 @@ public class ListActivity extends BaseActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add:
                 Log.i(TAG, "onOptionsItemSelected: ");
+                Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                startActivity(intent);
                 return true;
 
             case R.id.action_edit:
