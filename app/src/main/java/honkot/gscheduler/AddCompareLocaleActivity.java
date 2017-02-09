@@ -1,6 +1,5 @@
 package honkot.gscheduler;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +14,6 @@ import org.threeten.bp.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -27,7 +25,6 @@ import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.TmpTimeZone;
 import honkot.gscheduler.model.TmpTimeZone_Selector;
 import honkot.gscheduler.utils.AdapterGenerater;
-import honkot.gscheduler.utils.Debug;
 
 public class AddCompareLocaleActivity extends BaseActivity {
 
@@ -103,6 +100,8 @@ public class AddCompareLocaleActivity extends BaseActivity {
             ListRowBinding binding;
             if (convertView == null) {
                 binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.list_row, parent, false);
+                binding.rowClickView.setFocusable(false);
+                binding.rowClickView.setClickable(false);
             } else {
                 binding = DataBindingUtil.getBinding(convertView);
             }
@@ -138,8 +137,7 @@ public class AddCompareLocaleActivity extends BaseActivity {
 
             compareLocaleDao.insert(locale);
 
-            //TODO 消す
-            startActivity(new Intent(getApplicationContext(), ListActivity.class));
+            setResult(ListActivity.RESULT_SUCCESS);
             finish();
         }
     }

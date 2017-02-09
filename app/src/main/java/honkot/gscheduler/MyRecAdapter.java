@@ -23,6 +23,11 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         mData = compareLocale;
     }
 
+    public void setData(ArrayList<CompareLocale> compareLocale) {
+        mData = compareLocale;
+        notifyDataSetChanged();
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());

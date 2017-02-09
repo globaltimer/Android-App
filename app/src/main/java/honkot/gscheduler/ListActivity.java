@@ -20,6 +20,9 @@ import honkot.gscheduler.model.CompareLocale;
 public class ListActivity extends BaseActivity {
 
     private static final String TAG = "LIST_ACTIVITY";
+    private static final int REQUEST_CODE = 1;
+    public static final int RESULT_SUCCESS = 1;
+
     @Inject
     CompareLocaleDao compareLocaleDao;
     ArrayList<CompareLocale> worldTimes;
@@ -30,6 +33,16 @@ public class ListActivity extends BaseActivity {
         getComponent().inject(this);
         setContentView(R.layout.activity_list);
         initView();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_SUCCESS) {
+            RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recylerView);
+            ((MyRecAdapter)recyclerView.getAdapter()).setData(
+                    (ArrayList<CompareLocale>)compareLocaleDao.findAll().toList());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initView() {
@@ -62,8 +75,8 @@ public class ListActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_add:
                 Log.i(TAG, "onOptionsItemSelected: ");
-                Intent intent = new Intent(ListActivity.this, MainActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(ListActivity.this, AddCompareLocaleActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
                 return true;
 
             case R.id.action_edit:
