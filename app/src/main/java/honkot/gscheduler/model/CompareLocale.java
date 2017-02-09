@@ -18,7 +18,7 @@ import java.util.TimeZone;
 import honkot.gscheduler.utils.AdapterGenerater;
 
 @Table
-public class CompareLocale {
+public class CompareLocale implements ListBindingInterface {
 
     @Column(value = BaseColumns._ID)
     @PrimaryKey(autoincrement = true)
@@ -123,9 +123,16 @@ public class CompareLocale {
         this.zonedDateTime = zonedDateTime;
     }
 
+    @Override
     public String getDisplayCity() { return getLocationName();}
+
+    @Override
     public String getDisplayDate() { return zonedDateTime.toLocalDate().toString();}
+
+    @Override
     public String getDisplayTime() { return zonedDateTime.toLocalTime().toString();}
+
+    @Override
     public String getDisplayGMT() { return zonedDateTime.getZone().toString();}
 
     @Override

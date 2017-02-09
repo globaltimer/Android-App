@@ -86,7 +86,7 @@ public class AdapterGenerater {
         return adapter;
     }
 
-    private static List<HashMap<String, Object>> getZones(Context context) {
+    public static List<HashMap<String, Object>> getZones(Context context) {
         final List<HashMap<String, Object>> myData = new ArrayList<HashMap<String, Object>>();
         final long date = Calendar.getInstance().getTimeInMillis();
         try {
