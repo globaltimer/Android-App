@@ -22,19 +22,8 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         this.selector = selector;
     }
 
-<<<<<<< HEAD
-
-
-
-//    public MyRecAdapter  r(Context applicationContext, int list_row, ArrayList<CompareLocale> worldTimes) {
-//    }
-
-    public void setData(ArrayList<CompareLocale> compareLocale) {
-        mData = compareLocale;
-=======
     public void setDataAndUpdateList(CompareLocale_Selector selector) {
         this.selector = selector;
->>>>>>> origin/master
         notifyDataSetChanged();
     }
 

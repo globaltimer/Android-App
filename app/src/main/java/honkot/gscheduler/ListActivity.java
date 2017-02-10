@@ -25,11 +25,6 @@ public class ListActivity extends BaseActivity {
 
     @Inject
     CompareLocaleDao compareLocaleDao;
-<<<<<<< HEAD
-    ArrayList<CompareLocale> worldTimes;
-    RecyclerView recyclerView;
-=======
->>>>>>> origin/master
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +46,8 @@ public class ListActivity extends BaseActivity {
 
     private void initView() {
 
-<<<<<<< HEAD
-        worldTimes = new ArrayList<>(compareLocaleDao.findAll().toList());
-        recyclerView = (RecyclerView)findViewById(R.id.recylerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        MyRecAdapter myAdapter = new MyRecAdapter(worldTimes, new MyRecAdapter.OnItemClickListener() {
-=======
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
->>>>>>> origin/master
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
                 Intent intent = new Intent(ListActivity.this, MainActivity.class);
@@ -68,21 +55,14 @@ public class ListActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-<<<<<<< HEAD
-        recyclerView.setAdapter(myAdapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        binding.recyclerView.setAdapter(myAdapter);
+        binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         setUpItemTouchHelper();
 
     }
 
     private void setUpItemTouchHelper(){
-
-
-=======
-        binding.recyclerView.setAdapter(myAdapter);
-        binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
->>>>>>> origin/master
     }
     
 
