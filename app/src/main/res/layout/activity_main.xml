@@ -12,11 +12,20 @@
         android:orientation="vertical"
         tools:context="honkot.gscheduler.MainActivity">
 
-        <CheckBox
-            android:id="@+id/basisCheckBox"
-            android:text="（試験用）basis"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/basisCheckBox"
+                android:text="（試験用）basis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
         <EditText
             android:id="@+id/taskEditText"
             android:hint="Type task name here"

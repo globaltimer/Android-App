@@ -1,90 +1,90 @@
 package honkot.gscheduler;
 
-import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import javax.inject.Inject;
 
 import honkot.gscheduler.dao.CompareLocaleDao;
-import honkot.gscheduler.databinding.ListRowBinding;
+import honkot.gscheduler.databinding.ActivityListBinding;
 import honkot.gscheduler.model.CompareLocale;
 
 public class ListActivity extends BaseActivity {
 
+    private static final String TAG = "LIST_ACTIVITY";
+    private static final int REQUEST_CODE = 1;
+    public static final int RESULT_SUCCESS = 1;
+    private ActivityListBinding binding;
+
     @Inject
     CompareLocaleDao compareLocaleDao;
-
-    ListView listView;
-    ArrayAdapter<CompareLocale> adapter;
-    ArrayList<CompareLocale> worldTimes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getComponent().inject(this);
-        setContentView(R.layout.activity_list);
 
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_list);
         initView();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_SUCCESS) {
+            MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+            adapter.setDataAndUpdateList(compareLocaleDao.findAll());
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void initView() {
-        worldTimes = (ArrayList<CompareLocale>)compareLocaleDao.findAll().toList();
 
-        listView = (ListView) findViewById(R.id.listView);
-        adapter = new MyAdaptor(
-                this,
-                R.layout.list_row,
-                worldTimes
-        );
-
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener((AdapterView.OnItemClickListener)adapter);
-
-    }
-
-    private class MyAdaptor extends ArrayAdapter<CompareLocale> implements AdapterView.OnItemClickListener{
-
-
-        public MyAdaptor(Context context, int resource, ArrayList<CompareLocale> objects) {
-            super(context, resource, objects);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ListRowBinding binding;
-            if (convertView == null) {
-                binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.list_row, parent, false);
-            } else {
-                binding = DataBindingUtil.getBinding(convertView);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(CompareLocale compareLocale) {
+                Intent intent = new Intent(ListActivity.this, MainActivity.class);
+                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
+                startActivity(intent);
             }
-
-            binding.setCompareLocale(getItem(position));
-
-//            Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-//                    "fonts/Baloo-Regular.ttf");
-//
-//            cityTextView.setTypeface(tf);
-
-            return binding.getRoot();
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Toast.makeText(getApplicationContext(), getItem(position).getGMT(), Toast.LENGTH_LONG).show();
-
-            //ここで時間とか、listviewの中にあるものを表示させることもできる。
-        }
+        });
+        binding.recyclerView.setAdapter(myAdapter);
+        binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Log.i(TAG, "onOptionsItemSelected: ");
+                Intent intent = new Intent(ListActivity.this, AddCompareLocaleActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+                return true;
+
+            case R.id.action_edit:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
 }
