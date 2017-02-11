@@ -99,7 +99,7 @@ public class ListActivity extends BaseActivity {
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
                 MyRecAdapter testAdapter = (MyRecAdapter) recyclerView.getAdapter();
-                if (testAdapter.isUndoOn() && testAdapter.isPendingRemoval(position)) {
+                if (testAdapter.isUndoOn() ) {
                     return 0;
                 }
                 return super.getSwipeDirs(recyclerView, viewHolder);
@@ -108,24 +108,18 @@ public class ListActivity extends BaseActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int swipedPosition = viewHolder.getAdapterPosition();
-                MyRecAdapter adapter = (MyRecAdapter) binding.recyclerView.getAdapter();
-                boolean undoOn = adapter.isUndoOn();
-                Log.e("test", "### undo " + undoOn);
+                MyRecAdapter testAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
+                boolean undoOn = testAdapter.isUndoOn();
                 if (undoOn) {
-                    adapter.pendingRemoval(swipedPosition);
+                    testAdapter.pendingRemoval(swipedPosition);
                 } else {
-                    adapter.remove(swipedPosition);
+                    testAdapter.remove(swipedPosition);
                 }
             }
 
-            private boolean swiped = false;
-
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView,
-                                    RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
-
-                viewHolder.getLayoutPosition();
 
                 // not sure why, but this method get's called for viewholder that are already swiped away
                 if (viewHolder.getAdapterPosition() == -1) {
@@ -138,18 +132,7 @@ public class ListActivity extends BaseActivity {
                 }
 
                 // draw red background
-                if (isCurrentlyActive && dX < -300) {
-                    dX = -300;
-                    swiped = true;
-                } else if (!isCurrentlyActive && swiped) {
-                    dX = -300;
-                }
-                Log.e("test", "### " + dX + ", " + actionState + ", " + isCurrentlyActive);
-                background.setBounds(
-                        itemView.getRight() + (int) dX,
-                        itemView.getTop(),
-                        itemView.getRight(),
-                        itemView.getBottom());
+                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
                 background.draw(c);
 
                 // draw x mark
@@ -167,7 +150,6 @@ public class ListActivity extends BaseActivity {
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
-
         };
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         mItemTouchHelper.attachToRecyclerView(binding.recyclerView);

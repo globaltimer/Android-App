@@ -19,11 +19,11 @@ import honkot.gscheduler.model.CompareLocale_Selector;
 public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
 
-    private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
+//    private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
 
     boolean undoOn;
     List<String> items;
-    List<String> itemsPendingRemoval;
+//    List<String> itemsPendingRemoval;
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;
     private Handler handler = new Handler(); // hanlder for running delayed runnables
@@ -93,13 +93,13 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     }
 
     public boolean isUndoOn() {
-        return undoOn;
+        return false;
     }
 
     public void pendingRemoval(int position) {
         final String item = items.get(position);
-        if (!itemsPendingRemoval.contains(item)) {
-            itemsPendingRemoval.add(item);
+//        if (!itemsPendingRemoval.contains(item)) {
+//            itemsPendingRemoval.add(item);
             // this will redraw row in "undo" state
             notifyItemChanged(position);
             // let's create, store and post a runnable to remove the item
@@ -109,26 +109,26 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
                     remove(items.indexOf(item));
                 }
             };
-            handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
+//            handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
             pendingRunnables.put(item, pendingRemovalRunnable);
         }
-    }
+
 
     public void remove(int position) {
         String item = items.get(position);
-        if (itemsPendingRemoval.contains(item)) {
-            itemsPendingRemoval.remove(item);
-        }
+//        if (itemsPendingRemoval.contains(item)) {
+//            itemsPendingRemoval.remove(item);
+//        }
         if (items.contains(item)) {
             items.remove(position);
             notifyItemRemoved(position);
         }
     }
-
-    public boolean isPendingRemoval(int position) {
-        String item = items.get(position);
-        return itemsPendingRemoval.contains(item);
-    }
+//
+//    public boolean isPendingRemoval(int position) {
+//        String item = items.get(position);
+//        return itemsPendingRemoval.contains(item);
+//    }
 
 
 }
