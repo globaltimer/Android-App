@@ -1,12 +1,15 @@
 package honkot.gscheduler;
 
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AlphabetIndexer;
 import android.widget.BaseAdapter;
 import android.widget.SearchView;
+import android.widget.SectionIndexer;
 
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
@@ -23,6 +26,7 @@ import honkot.gscheduler.databinding.ActivityAddCompareLocaleBinding;
 import honkot.gscheduler.databinding.ListRowBinding;
 import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.TmpTimeZone;
+import honkot.gscheduler.model.TmpTimeZone_Schema;
 import honkot.gscheduler.model.TmpTimeZone_Selector;
 import honkot.gscheduler.utils.AdapterGenerater;
 
@@ -61,9 +65,11 @@ public class AddCompareLocaleActivity extends BaseActivity {
         });
     }
 
-    private class CustomAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+    private class CustomAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, SectionIndexer {
 
         TmpTimeZone_Selector selector;
+        Cursor cursor;
+        AlphabetIndexer mAlphabetIndexer;
 
         private void initialize() {
             // delete all
@@ -83,14 +89,24 @@ public class AddCompareLocaleActivity extends BaseActivity {
 
             // insert all
             tmpTimeZoneDao.insert(tmpTimeZones);
-            selector = tmpTimeZoneDao.findAll();
+            setSelector(tmpTimeZoneDao.findAll());
+
+            mAlphabetIndexer = new AlphabetIndexer(
+                    cursor,
+                    cursor.getColumnIndex(TmpTimeZone_Schema.INSTANCE.name.name),
+                    " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        }
+
+        private void setSelector(TmpTimeZone_Selector selector) {
+            this.selector = selector;
+            cursor = selector.execute();
         }
 
         private void search(String value) {
             if (value.isEmpty()) {
                 initialize();
             } else {
-                selector = tmpTimeZoneDao.likeQuery(value);
+                setSelector(tmpTimeZoneDao.likeQuery(value));
             }
             notifyDataSetChanged();
         }
@@ -140,6 +156,24 @@ public class AddCompareLocaleActivity extends BaseActivity {
 
             setResult(ListActivity.RESULT_SUCCESS);
             finish();
+        }
+
+        @Override
+        public Object[] getSections() {
+            return mAlphabetIndexer == null ? new Object[0]
+                    : mAlphabetIndexer.getSections();
+        }
+
+        @Override
+        public int getPositionForSection(int sectionIndex) {
+            return mAlphabetIndexer == null ? 0
+                    : mAlphabetIndexer.getPositionForSection(sectionIndex);
+        }
+
+        @Override
+        public int getSectionForPosition(int position) {
+            return mAlphabetIndexer == null ? 0
+                    : mAlphabetIndexer.getSectionForPosition(position);
         }
     }
 }
