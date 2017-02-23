@@ -63,6 +63,9 @@ public class AddCompareLocaleActivity extends BaseActivity {
                 return true;
             }
         });
+
+        // remove focus from EditText
+        binding.listView.requestFocus();
     }
 
     private class CustomAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, SectionIndexer {
