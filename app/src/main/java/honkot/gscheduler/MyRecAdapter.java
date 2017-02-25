@@ -22,7 +22,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 //    private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
 
     boolean undoOn;
-    List<String> items;
+    public List<String> items;
 //    List<String> itemsPendingRemoval;
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;

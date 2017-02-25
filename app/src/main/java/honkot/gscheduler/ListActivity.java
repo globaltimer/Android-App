@@ -3,12 +3,8 @@ package honkot.gscheduler;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +27,7 @@ public class ListActivity extends BaseActivity {
     private static final int REQUEST_CODE = 1;
     public static final int RESULT_SUCCESS = 1;
     private ActivityListBinding binding;
+    MyRecAdapter myAdapter;
 
     @Inject
     CompareLocaleDao compareLocaleDao;
@@ -56,7 +53,7 @@ public class ListActivity extends BaseActivity {
     private void initView() {
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
+        myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
                 Intent intent = new Intent(ListActivity.this, MainActivity.class);
@@ -72,89 +69,51 @@ public class ListActivity extends BaseActivity {
     }
 
     private void setUpItemTouchHelper() {
-
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-
-            // we want to cache these and not allocate anything repeatedly in the onChildDraw method
-            Drawable background;
-            Drawable xMark;
-            int xMarkMargin;
-            boolean initiated;
-
-            private void init() {
-                background = new ColorDrawable(Color.RED);
-                xMark = ContextCompat.getDrawable(ListActivity.this, R.drawable.ic_delete_black_24dp);
-                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                xMarkMargin = (int) ListActivity.this.getResources().getDimension(R.dimen.activity_horizontal_margin);
-                initiated = true;
-            }
-
-            // not important, we don't want drag & drop
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
+                final int fromPos = viewHolder.getAdapterPosition();
+                final int toPos = target.getAdapterPosition();
+                myAdapter.notifyItemMoved(fromPos, toPos);
+                return true;
             }
 
             @Override
-            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-                MyRecAdapter testAdapter = (MyRecAdapter) recyclerView.getAdapter();
-                if (testAdapter.isUndoOn() ) {
-                    return 0;
-                }
-                return super.getSwipeDirs(recyclerView, viewHolder);
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                int swipedPosition = viewHolder.getAdapterPosition();
-                MyRecAdapter testAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
-                boolean undoOn = testAdapter.isUndoOn();
-                if (undoOn) {
-                    testAdapter.pendingRemoval(swipedPosition);
-                } else {
-                    testAdapter.remove(swipedPosition);
-                }
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final int fromPos = viewHolder.getAdapterPosition();
+                myAdapter.remove(fromPos);
+//                myAdapter.notifyItemRemoved(fromPos);
             }
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                View itemView = viewHolder.itemView;
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Get RecyclerView item from the ViewHolder
+                    View itemView = viewHolder.itemView;
 
-                // not sure why, but this method get's called for viewholder that are already swiped away
-                if (viewHolder.getAdapterPosition() == -1) {
-                    // not interested in those
-                    return;
+                    Paint p = new Paint();
+                    if (dX > 0) {
+            /* Set your color for positive displacement */
+
+                        // Draw Rect with varying right side, equal to displacement dX
+                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                                (float) itemView.getBottom(), p);
+                    } else {
+            /* Set your color for negative displacement */
+
+                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
+                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                    }
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 }
-
-                if (!initiated) {
-                    init();
-                }
-
-                // draw red background
-                background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                background.draw(c);
-
-                // draw x mark
-                int itemHeight = itemView.getBottom() - itemView.getTop();
-                int intrinsicWidth = xMark.getIntrinsicWidth();
-                int intrinsicHeight = xMark.getIntrinsicWidth();
-
-                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
-                int xMarkBottom = xMarkTop + intrinsicHeight;
-                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-
-                xMark.draw(c);
-
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
-        };
-        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        mItemTouchHelper.attachToRecyclerView(binding.recyclerView);
+        });
+
+        touchHelper.attachToRecyclerView(binding.recyclerView);
     }
-    
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
