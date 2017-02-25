@@ -2,7 +2,6 @@ package honkot.gscheduler.fragment;
 
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,22 +42,21 @@ public class RecordListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        ((BaseActivity) getActivity()).getComponent().inject(this);
+
+        binding = FragmentRecordListBinding.inflate(
+                getActivity().getLayoutInflater(), null, false);
+        initView();
+        return binding.getRoot();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((BaseActivity) getActivity()).getComponent().inject(this);
-
         setHasOptionsMenu(true);
-
-        binding = DataBindingUtil.setContentView(getActivity(), R.layout.fragment_record_list);
-        initView();
     }
 
     private void initView() {
-
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
