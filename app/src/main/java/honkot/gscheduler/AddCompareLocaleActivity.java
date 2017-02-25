@@ -24,6 +24,7 @@ import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.dao.TmpTimeZoneDao;
 import honkot.gscheduler.databinding.ActivityAddCompareLocaleBinding;
 import honkot.gscheduler.databinding.ListRowBinding;
+import honkot.gscheduler.fragment.RecordListFragment;
 import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.TmpTimeZone;
 import honkot.gscheduler.model.TmpTimeZone_Schema;
@@ -157,7 +158,7 @@ public class AddCompareLocaleActivity extends BaseActivity {
 
             compareLocaleDao.insert(locale);
 
-            setResult(ListActivity.RESULT_SUCCESS);
+            setResult(RecordListFragment.RESULT_SUCCESS);
             finish();
         }
 

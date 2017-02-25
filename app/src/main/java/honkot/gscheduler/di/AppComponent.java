@@ -1,22 +1,19 @@
 package honkot.gscheduler.di;
 
-import android.app.Application;
-
 import javax.inject.Singleton;
 
 import dagger.Component;
 import honkot.gscheduler.AddCompareLocaleActivity;
-import honkot.gscheduler.ListActivity;
 import honkot.gscheduler.MainActivity;
+import honkot.gscheduler.fragment.RecordListFragment;
 
 @Singleton
 @Component(modules = AppModule.class)
 public interface AppComponent {
-    void inject(Application application);
-
-    void inject(ListActivity listActivity);
 
     void inject(MainActivity mainActivity);
+
+    void inject(RecordListFragment fragment);
 
     void inject(AddCompareLocaleActivity activity);
 }
