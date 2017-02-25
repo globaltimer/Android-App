@@ -35,11 +35,12 @@ public class TmpTimeZoneDao {
 
     public TmpTimeZone_Selector likeQuery(String query) {
         return relation().selector().where(
-                TmpTimeZone_Schema.INSTANCE.name.getEscapedName() + " LIKE ?", "%" + query + "%");
+                TmpTimeZone_Schema.INSTANCE.name.getEscapedName() + " LIKE ?", "%" + query + "%")
+                .orderByNameAsc();
     }
 
     public TmpTimeZone_Selector findAll() {
-        return relation().selector().idNotEq(0);
+        return relation().selector().idNotEq(0).orderByNameAsc();
     }
 
     public void insert(final List<TmpTimeZone> tmpTimeZones) {
