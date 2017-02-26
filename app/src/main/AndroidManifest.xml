@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".AddCompareLocaleActivity" />
+        <activity android:name=".CompareLocaleListActivity" />
     </application>
 
 </manifest>

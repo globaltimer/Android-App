@@ -24,7 +24,7 @@ public class CompareLocale implements ListBindingInterface {
     @PrimaryKey(autoincrement = true)
     private long id;
 
-    @Column
+    @Column(indexed = true)
     @NonNull
     private boolean basis;
 

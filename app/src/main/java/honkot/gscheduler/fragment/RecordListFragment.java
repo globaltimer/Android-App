@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import honkot.gscheduler.AddCompareLocaleActivity;
 import honkot.gscheduler.BaseActivity;
-import honkot.gscheduler.MainActivity;
+import honkot.gscheduler.CompareLocaleListActivity;
 import honkot.gscheduler.MyRecAdapter;
 import honkot.gscheduler.R;
 import honkot.gscheduler.dao.CompareLocaleDao;
@@ -61,8 +61,10 @@ public class RecordListFragment extends Fragment {
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
+                // TODO Change to correct. This is temporary program for debug.
+                compareLocaleDao.changeBasis(compareLocale);
+                Intent intent = new Intent(getActivity(), CompareLocaleListActivity.class);
+//                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
                 startActivity(intent);
             }
         });

@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import honkot.gscheduler.AddCompareLocaleActivity;
 import honkot.gscheduler.MainActivity;
+import honkot.gscheduler.fragment.CompareListFragment;
 import honkot.gscheduler.fragment.RecordListFragment;
 import honkot.gscheduler.fragment.SearchListFragment;
 
@@ -17,6 +18,8 @@ public interface AppComponent {
     void inject(RecordListFragment fragment);
 
     void inject(SearchListFragment fragment);
+
+    void inject(CompareListFragment fragment);
 
     void inject(AddCompareLocaleActivity activity);
 }
