@@ -1,13 +1,12 @@
 package honkot.gscheduler;
 
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import honkot.gscheduler.databinding.ListRowBinding;
@@ -19,16 +18,12 @@ import honkot.gscheduler.model.CompareLocale_Selector;
  */
 public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
-    private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
-    boolean undoOn;
+    private static final String TAG = "Adapter";
     List<CompareLocale> items;
-    List<CompareLocale> itemsPendingRemoval;
     CompareLocale item;
 
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;
-    private Handler handler = new Handler(); // hanlder for running delayed runnables
-    HashMap<String, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
 
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener) {
@@ -90,46 +85,12 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     }
 
 
-    public void setUndoOn(boolean undoOn) {
-        this.undoOn = undoOn;
-    }
-
-    public boolean isUndoOn() {
-        return false;
-    }
-
-
-    public void pendingRemoval(int position) {
-        item = getItemForPosition(position);
-        if (!itemsPendingRemoval.contains(item)) {
-            itemsPendingRemoval.add(item);
-            // this will redraw row in "undo" state
-            notifyItemChanged(position);
-            // let's create, store and post a runnable to remove the item
-            Runnable pendingRemovalRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    remove(items.indexOf(item));
-                }
-            };
-            handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
-            pendingRunnables.put(String.valueOf(item), pendingRemovalRunnable);
-        }
-    }
-
     public void remove(int position) {
+
         item = getItemForPosition(position);
-        if (itemsPendingRemoval.contains(item)) {
-            itemsPendingRemoval.remove(item);
-        }
-        if (items.contains(item)) {
-            notifyItemRemoved(position);
-            items.remove(position);
-        }
+        items.remove(item);
+        notifyItemRemoved(position);
+
     }
 
-    public boolean isPendingRemoval(int position) {
-        item = getItemForPosition(position);
-        return itemsPendingRemoval.contains(item);
-    }
 }

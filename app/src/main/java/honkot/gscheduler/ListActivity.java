@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,9 +20,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import javax.inject.Inject;
 
 import honkot.gscheduler.dao.CompareLocaleDao;
+import honkot.gscheduler.databinding.ActivityListBinding;
 import honkot.gscheduler.model.CompareLocale;
 
 public class ListActivity extends BaseActivity {
@@ -29,11 +36,16 @@ public class ListActivity extends BaseActivity {
     private static final String TAG = "LIST_ACTIVITY";
     private static final int REQUEST_CODE = 1;
     public static final int RESULT_SUCCESS = 1;
-    private honkot.gscheduler.databinding.ActivityListBinding binding;
+    private ActivityListBinding binding;
     MyRecAdapter myAdapter;
 
     @Inject
     public CompareLocaleDao compareLocaleDao;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +54,15 @@ public class ListActivity extends BaseActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_list);
         initView();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_SUCCESS) {
-            MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+            MyRecAdapter adapter = (MyRecAdapter) binding.recyclerView.getAdapter();
             adapter.setDataAndUpdateList(compareLocaleDao.findAll());
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -71,21 +86,10 @@ public class ListActivity extends BaseActivity {
 
     }
 
+
+
     private void setUpItemTouchHelper() {
         ItemTouchHelper.SimpleCallback touchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            // we want to cache these and not allocate anything repeatedly in the onChildDraw method
-            Drawable background;
-            Drawable xMark;
-            int xMarkMargin;
-            boolean initiated;
-
-            private void init() {
-                background = new ColorDrawable(Color.RED);
-                xMark = ContextCompat.getDrawable(ListActivity.this, R.drawable.ic_delete_black_24dp);
-                xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-                xMarkMargin = (int) ListActivity.this.getResources().getDimension(R.dimen.text_margin);
-                initiated = true;
-            }
 
             // not important, we don't want drag & drop
             @Override
@@ -94,57 +98,37 @@ public class ListActivity extends BaseActivity {
             }
 
             @Override
-            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-                MyRecAdapter testAdapter = (MyRecAdapter) recyclerView.getAdapter();
-                if (testAdapter.isUndoOn() && testAdapter.isPendingRemoval(position)) {
-                    return 0;
-                }
-                return super.getSwipeDirs(recyclerView, viewHolder);
-            }
-
-            @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int swipedPosition = viewHolder.getAdapterPosition();
-                MyRecAdapter adapter = (MyRecAdapter) binding.recyclerView.getAdapter();
-                boolean undoOn = adapter.isUndoOn();
-                if (undoOn) {
-                    adapter.pendingRemoval(swipedPosition);
-                } else {
-                    adapter.remove(swipedPosition);
-                }
+                myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
+                myAdapter.remove(swipedPosition);
             }
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
 
-                // not sure why, but this method get's called for viewholder that are already swiped away
-                if (viewHolder.getAdapterPosition() == -1) {
-                    // not interested in those
-                    return;
-                }
 
-                if (!initiated) {
-                    init();
-                }
+                Drawable background = new ColorDrawable(Color.RED);
+                Drawable binIcon = ContextCompat.getDrawable(ListActivity.this, R.drawable.ic_delete_black_24dp);
+                binIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                int iconMargin = (int) ListActivity.this.getResources().getDimension(R.dimen.text_margin);
 
-                // draw red background
+                // color Background
                 background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
                 background.draw(c);
 
-                // draw x mark
+                // draw Bin Icon
                 int itemHeight = itemView.getBottom() - itemView.getTop();
-                int intrinsicWidth = xMark.getIntrinsicWidth();
-                int intrinsicHeight = xMark.getIntrinsicWidth();
+                int intrinsicWidth = binIcon.getIntrinsicWidth();
+                int intrinsicHeight = binIcon.getIntrinsicWidth();
 
-                int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
-                int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int xMarkLeft = itemView.getRight() - iconMargin - intrinsicWidth;
+                int xMarkRight = itemView.getRight() - iconMargin;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                 int xMarkBottom = xMarkTop + intrinsicHeight;
-                xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
-
-                xMark.draw(c);
+                binIcon.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
+                binIcon.draw(c);
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
@@ -154,6 +138,7 @@ public class ListActivity extends BaseActivity {
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(touchHelper);
         mItemTouchHelper.attachToRecyclerView(binding.recyclerView);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,5 +167,41 @@ public class ListActivity extends BaseActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("List Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }
