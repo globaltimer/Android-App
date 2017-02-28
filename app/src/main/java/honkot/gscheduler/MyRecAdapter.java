@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,12 +19,12 @@ import honkot.gscheduler.model.CompareLocale_Selector;
  */
 public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
-
-//    private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
-
+    private static final int PENDING_REMOVAL_TIMEOUT = 3000; // 3sec
     boolean undoOn;
-    public List<String> items;
-//    List<String> itemsPendingRemoval;
+    List<CompareLocale> items;
+    List<CompareLocale> itemsPendingRemoval;
+    CompareLocale item;
+
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;
     private Handler handler = new Handler(); // hanlder for running delayed runnables
@@ -33,6 +34,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener) {
         this.listener = listener;
         this.selector = selector;
+        items = new ArrayList<>();
     }
 
     public void setDataAndUpdateList(CompareLocale_Selector selector) {
@@ -70,7 +72,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        CompareLocale item = getItemForPosition(position);
+        item = getItemForPosition(position);
         holder.binding.setCompareLocale(item);
     }
 
@@ -96,10 +98,11 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         return false;
     }
 
+
     public void pendingRemoval(int position) {
-        final String item = items.get(position);
-//        if (!itemsPendingRemoval.contains(item)) {
-//            itemsPendingRemoval.add(item);
+        item = getItemForPosition(position);
+        if (!itemsPendingRemoval.contains(item)) {
+            itemsPendingRemoval.add(item);
             // this will redraw row in "undo" state
             notifyItemChanged(position);
             // let's create, store and post a runnable to remove the item
@@ -109,26 +112,24 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
                     remove(items.indexOf(item));
                 }
             };
-//            handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
-            pendingRunnables.put(item, pendingRemovalRunnable);
-        }
-
-
-    public void remove(int position) {
-        String item = items.get(position);
-//        if (itemsPendingRemoval.contains(item)) {
-//            itemsPendingRemoval.remove(item);
-//        }
-        if (items.contains(item)) {
-            items.remove(position);
-            notifyItemRemoved(position);
+            handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
+            pendingRunnables.put(String.valueOf(item), pendingRemovalRunnable);
         }
     }
-//
-//    public boolean isPendingRemoval(int position) {
-//        String item = items.get(position);
-//        return itemsPendingRemoval.contains(item);
-//    }
 
+    public void remove(int position) {
+        item = getItemForPosition(position);
+        if (itemsPendingRemoval.contains(item)) {
+            itemsPendingRemoval.remove(item);
+        }
+        if (items.contains(item)) {
+            notifyItemRemoved(position);
+            items.remove(position);
+        }
+    }
 
+    public boolean isPendingRemoval(int position) {
+        item = getItemForPosition(position);
+        return itemsPendingRemoval.contains(item);
+    }
 }
