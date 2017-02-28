@@ -73,7 +73,6 @@ public class ListActivity extends BaseActivity {
     }
 
 
-
     private void setUpItemTouchHelper() {
         ItemTouchHelper.SimpleCallback touchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 

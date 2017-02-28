@@ -78,7 +78,6 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         void onItemClicked(CompareLocale compareLocale);
     }
 
-
     public void remove(int position) {
 
         CompareLocale item = getItemForPosition(position);
