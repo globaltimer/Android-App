@@ -12,14 +12,10 @@ import honkot.gscheduler.databinding.ListRowBinding;
 import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.CompareLocale_Selector;
 
-/**
- * Created by ayako_sayama on 2017/02/08.
- */
+
 public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
     private List<CompareLocale> items;
-    private CompareLocale item;
-
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;
 
@@ -65,7 +61,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        item = getItemForPosition(position);
+        CompareLocale item = getItemForPosition(position);
         holder.binding.setCompareLocale(item);
     }
 
@@ -85,7 +81,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     public void remove(int position) {
 
-        item = getItemForPosition(position);
+        CompareLocale item = getItemForPosition(position);
         items.remove(item);
         notifyItemRemoved(position);
 
