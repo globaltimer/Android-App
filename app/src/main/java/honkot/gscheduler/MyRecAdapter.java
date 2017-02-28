@@ -1,7 +1,6 @@
 package honkot.gscheduler;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,8 @@ import honkot.gscheduler.model.CompareLocale_Selector;
  */
 public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
-    private static final String TAG = "Adapter";
-    List<CompareLocale> items;
-    CompareLocale item;
+    private List<CompareLocale> items;
+    private CompareLocale item;
 
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;
@@ -51,7 +49,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         private final ListRowBinding binding;
 
         private MyViewHolder(ListRowBinding binding) {
-            super(binding.rowRoot);
+            super(binding.getRoot());
             this.binding = binding;
             this.binding.rowClickView.setOnClickListener(this);
         }
