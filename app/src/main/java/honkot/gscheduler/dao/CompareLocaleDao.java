@@ -33,6 +33,10 @@ public class CompareLocaleDao {
         return relation().selector();
     }
 
+    public CompareLocale_Selector findAllExceptBasis() {
+        return relation().selector().basisNotEq(true);
+    }
+
     public void changeBasis(final CompareLocale basisLocale) {
         if (basisLocale.getId() > 0) {
             relation().updater().basis(false).execute();

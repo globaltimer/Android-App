@@ -72,7 +72,7 @@ public class CompareListFragment extends Fragment {
 
     private void initView() {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
+        MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAllExceptBasis(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
 //                Intent intent = new Intent(getActivity(), MainActivity.class);
