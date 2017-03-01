@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable
@@ -9,7 +10,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dip"
+        android:layout_height="90dip"
         android:id="@+id/rowRoot"
         android:baselineAligned="true"
         android:background="@drawable/border">
@@ -18,12 +19,13 @@
             android:id="@+id/rowClickView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20sp"
-            android:paddingTop="2dip"
-            android:paddingBottom="2dip"
             android:clickable="true"
             android:focusable="true"
-            android:background="?android:attr/selectableItemBackground" >
+            android:background="?android:attr/selectableItemBackground"
+            android:paddingBottom="10sp"
+            android:paddingTop="10sp"
+            android:paddingLeft="16sp"
+            android:paddingRight="16sp">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -34,33 +36,32 @@
                 <TextView android:id="@+id/cityTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="6dip"
                     android:layout_weight="1"
-                    android:textSize="24sp"
-                    android:text="@{compareLocale.getDisplayCity()}"/>
+                    android:text="@{compareLocale.displayCity}"
+                    android:textSize="@dimen/text_size_city" />
 
                 <TextView android:id="@+id/dateTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="32dp"
                     android:layout_below="@android:id/text1"
                     android:layout_alignStart="@android:id/text1"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_alignLeft="@android:id/text1"
-                    android:layout_weight="1"
-                    android:text="@{compareLocale.getDisplayDate()}"/>
+                    android:text="@{compareLocale.displayDate}"
+                    android:textSize="@dimen/text_size_date"
+                    android:layout_alignLeft="@android:id/text1"/>
             </LinearLayout>
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/timeTextView"
+                android:text="@{compareLocale.displayTime}"
                 android:layout_weight="6.72"
                 android:typeface="sans"
-                android:textSize="36sp"
+                android:textSize="@dimen/text_size_time"
                 android:lineSpacingExtra="10sp"
-                android:textColor="#017e86"
-                android:gravity="right"
-                android:text="@{compareLocale.getDisplayTime()}"/>
+                android:textColor="@color/colorEmerald"
+                android:gravity="right" />
         </LinearLayout>
     </LinearLayout>
 
