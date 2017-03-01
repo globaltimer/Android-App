@@ -1,7 +1,6 @@
-package honkot.gscheduler;
+package honkot.gscheduler.activity;
 
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,14 +8,14 @@ import android.support.v4.view.ViewPager;
 
 import java.util.ArrayList;
 
+import honkot.gscheduler.R;
 import honkot.gscheduler.databinding.ActivityTabBinding;
 import honkot.gscheduler.fragment.CompareListFragment;
-import honkot.gscheduler.fragment.PageFragment;
 import honkot.gscheduler.fragment.RecordListFragment;
 import honkot.gscheduler.model.CompareLocale;
 
 public class TabActivity extends BaseActivity implements
-        ViewPager.OnPageChangeListener, PageFragment.OnFragmentInteractionListener {
+        ViewPager.OnPageChangeListener {
 
     private ActivityTabBinding binding;
     private final ArrayList<Fragment> fragments = new ArrayList<>();
@@ -90,9 +89,5 @@ public class TabActivity extends BaseActivity implements
 
     @Override
     public void onPageScrollStateChanged(int state) {
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
     }
 }

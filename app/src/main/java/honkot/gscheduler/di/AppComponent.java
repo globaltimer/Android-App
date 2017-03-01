@@ -3,8 +3,7 @@ package honkot.gscheduler.di;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import honkot.gscheduler.AddCompareLocaleActivity;
-import honkot.gscheduler.MainActivity;
+import honkot.gscheduler.activity.AddCompareLocaleActivity;
 import honkot.gscheduler.fragment.CompareListFragment;
 import honkot.gscheduler.fragment.RecordListFragment;
 import honkot.gscheduler.fragment.SearchListFragment;
@@ -12,8 +11,6 @@ import honkot.gscheduler.fragment.SearchListFragment;
 @Singleton
 @Component(modules = AppModule.class)
 public interface AppComponent {
-
-    void inject(MainActivity mainActivity);
 
     void inject(RecordListFragment fragment);
 
