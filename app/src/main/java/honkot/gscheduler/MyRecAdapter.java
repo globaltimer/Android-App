@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import honkot.gscheduler.databinding.ListRowBinding;
+import honkot.gscheduler.fragment.CompareListFragment;
 import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.CompareLocale_Selector;
 
@@ -17,11 +18,18 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     private List<CompareLocale> items;
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;
+    private CompareListFragment.OffsetMinsGetter offsetMinsGetter;
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener) {
         this.listener = listener;
         this.selector = selector;
         items = new ArrayList<>();
+    }
+
+    public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener
+            , CompareListFragment.OffsetMinsGetter offsetMinsGetter) {
+        this(selector, listener);
+        this.offsetMinsGetter = offsetMinsGetter;
     }
 
     public void setDataAndUpdateList(CompareLocale_Selector selector) {
@@ -59,6 +67,10 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         CompareLocale item = getItemForPosition(position);
+        if (offsetMinsGetter != null) {
+            item.setOffsetMins(offsetMinsGetter.getOffsetMins());
+        }
+
         holder.binding.setCompareLocale(item);
     }
 

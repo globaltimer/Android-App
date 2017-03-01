@@ -24,7 +24,7 @@ public class CompareLocale implements ListBindingInterface {
     @PrimaryKey(autoincrement = true)
     private long id;
 
-    @Column
+    @Column(indexed = true)
     @NonNull
     private boolean basis;
 
@@ -43,6 +43,8 @@ public class CompareLocale implements ListBindingInterface {
     @Column
     @NonNull
     private ZonedDateTime zonedDateTime;
+
+    private int offsetMins = 0;
 
     public CompareLocale() {
 
@@ -70,6 +72,7 @@ public class CompareLocale implements ListBindingInterface {
 
     @Getter
     @NonNull
+    @Override
     public boolean isBasis() {
         return basis;
     }
@@ -118,6 +121,14 @@ public class CompareLocale implements ListBindingInterface {
         return zonedDateTime;
     }
 
+    public int getOffsetMins() {
+        return offsetMins;
+    }
+
+    public void setOffsetMins(int offsetMins) {
+        this.offsetMins = offsetMins;
+    }
+
     @Setter
     public void setZonedDateTime(@NonNull ZonedDateTime zonedDateTime) {
         this.zonedDateTime = zonedDateTime;
@@ -127,10 +138,10 @@ public class CompareLocale implements ListBindingInterface {
     public String getDisplayCity() { return getLocationName();}
 
     @Override
-    public String getDisplayDate() { return zonedDateTime.toLocalDate().toString();}
+    public String getDisplayDate() { return zonedDateTime.plusMinutes(offsetMins).toLocalDate().toString();}
 
     @Override
-    public String getDisplayTime() { return zonedDateTime.toLocalTime().toString();}
+    public String getDisplayTime() { return zonedDateTime.plusMinutes(offsetMins).toLocalTime().toString();}
 
     @Override
     public String getDisplayGMT() { return zonedDateTime.getZone().toString();}

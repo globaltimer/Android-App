@@ -33,6 +33,17 @@ public class CompareLocaleDao {
         return relation().selector();
     }
 
+    public void changeBasis(final CompareLocale basisLocale) {
+        if (basisLocale.getId() > 0) {
+            relation().updater().basis(false).execute();
+            relation().updater().idEq(basisLocale.getId()).basis(true).execute();
+        }
+    }
+
+    public CompareLocale getBasisLocale() {
+        return relation().selector().basisEq(true).value();
+    }
+
     public void insert(final CompareLocale favorite) {
         orma.transactionNonExclusiveSync(new Runnable() {
             @Override

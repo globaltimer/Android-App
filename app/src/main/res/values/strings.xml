@@ -1,4 +1,14 @@
 <resources>
-    <string name="app_name">Global Clock</string>
-    <string name="search">SEARCH</string>
+  <string name="app_name">Global Clock</string>
+  <string name="search">SEARCH</string>
+
+  <string name="now">Now</string>
+  <string name="future">%1$s:%2$s hours in the future</string>
+  <string name="past">%1$s:%2$s hours in the past</string>
+  <string name="leftArrow">＜</string>
+  <string name="rightArrow">＞</string>
+  <string-array name="tab_titles">
+      <item>Time Now</item>
+      <item>Set Time</item>
+  </string-array>
 </resources>

@@ -26,7 +26,7 @@ import javax.inject.Inject;
 
 import honkot.gscheduler.AddCompareLocaleActivity;
 import honkot.gscheduler.BaseActivity;
-import honkot.gscheduler.MainActivity;
+import honkot.gscheduler.CompareLocaleListActivity;
 import honkot.gscheduler.MyRecAdapter;
 import honkot.gscheduler.R;
 import honkot.gscheduler.dao.CompareLocaleDao;
@@ -39,6 +39,11 @@ public class RecordListFragment extends Fragment {
     private static final int REQUEST_CODE = 1;
     public static final int RESULT_SUCCESS = 1;
     private FragmentRecordListBinding binding;
+
+    private OnItemClickListener listener;
+    public interface OnItemClickListener {
+        void onItemClick(CompareLocale compareLocale);
+    }
 
     @Inject
     CompareLocaleDao compareLocaleDao;
@@ -54,6 +59,10 @@ public class RecordListFragment extends Fragment {
         return binding.getRoot();
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +74,20 @@ public class RecordListFragment extends Fragment {
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
-                startActivity(intent);
+                if (compareLocale.isBasis()) {
+                    if (listener != null) {
+                        listener.onItemClick(compareLocale);
+
+                    } else {
+                        // fail safe
+                        Intent intent = new Intent(getActivity(), CompareLocaleListActivity.class);
+                        startActivity(intent);
+                    }
+                } else {
+                    compareLocaleDao.changeBasis(compareLocale);
+                    MyRecAdapter myAdapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+                    myAdapter.setDataAndUpdateList(compareLocaleDao.findAll());
+                }
             }
         });
         binding.recyclerView.setAdapter(myAdapter);
@@ -156,7 +176,6 @@ public class RecordListFragment extends Fragment {
 
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
-
         };
 
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(touchHelper);

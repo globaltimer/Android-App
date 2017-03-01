@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorEmerald</item>
         <item name="colorPrimaryDark">@color/colorEmeraldDark</item>
         <item name="colorAccent">@color/colorRouge</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
 </resources>

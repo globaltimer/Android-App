@@ -119,4 +119,9 @@ public class TmpTimeZone implements ListBindingInterface {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean isBasis() {
+        return false;
+    }
 }
