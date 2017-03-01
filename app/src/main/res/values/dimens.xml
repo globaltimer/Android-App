@@ -5,4 +5,5 @@
 
     <dimen name="searchView_margin">8dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="height_basisLocale">200dp</dimen>
 </resources>
