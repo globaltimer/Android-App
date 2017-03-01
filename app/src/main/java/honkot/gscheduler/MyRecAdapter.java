@@ -5,27 +5,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import honkot.gscheduler.databinding.ListRowBinding;
 import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.CompareLocale_Selector;
 
-/**
- * Created by ayako_sayama on 2017/02/08.
- */
+
 public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder> {
 
+    private List<CompareLocale> items;
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;
+
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener) {
         this.listener = listener;
         this.selector = selector;
+        items = new ArrayList<>();
     }
 
     public void setDataAndUpdateList(CompareLocale_Selector selector) {
         this.selector = selector;
         notifyDataSetChanged();
     }
+
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -71,6 +76,14 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     public interface OnItemClickListener {
         void onItemClicked(CompareLocale compareLocale);
+    }
+
+    public void remove(int position) {
+
+        CompareLocale item = getItemForPosition(position);
+        items.remove(item);
+        notifyItemRemoved(position);
+
     }
 
 }
