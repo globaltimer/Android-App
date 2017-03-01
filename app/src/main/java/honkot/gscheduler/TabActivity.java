@@ -1,33 +1,91 @@
 package honkot.gscheduler;
 
+import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTabHost;
-import android.widget.TabHost;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 
+import java.util.ArrayList;
+
+import honkot.gscheduler.databinding.ActivityTabBinding;
+import honkot.gscheduler.fragment.CompareListFragment;
+import honkot.gscheduler.fragment.PageFragment;
 import honkot.gscheduler.fragment.RecordListFragment;
-import honkot.gscheduler.fragment.SearchListFragment;
+import honkot.gscheduler.model.CompareLocale;
 
-public class TabActivity extends BaseActivity {
+public class TabActivity extends BaseActivity implements
+        ViewPager.OnPageChangeListener, PageFragment.OnFragmentInteractionListener {
+
+    private ActivityTabBinding binding;
+    private final ArrayList<Fragment> fragments = new ArrayList<>();
+    private String[] pageTitle;
+    private final int PAGE_COMPARE = 0;
+    private final int PAGE_RECORD_LIST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tab);
 
-        FragmentTabHost tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
-        tabHost.setup(this, getSupportFragmentManager(), R.id.content);
+        // initialize binder and fragments
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_tab);
+        pageTitle = getResources().getStringArray(R.array.tab_titles);
+        RecordListFragment recordListFragment = new RecordListFragment();
+        recordListFragment.setOnItemClickListener(new RecordListFragment.OnItemClickListener() {
+            @Override
+            public void onItemClick(CompareLocale compareLocale) {
+                FragmentPagerAdapter adapter =
+                        (FragmentPagerAdapter) binding.pager.getAdapter();
+                CompareListFragment fragment =
+                        (CompareListFragment) adapter.getItem(PAGE_COMPARE);
+                fragment.initialize();
+                binding.pager.setCurrentItem(PAGE_COMPARE);
+            }
+        });
+        fragments.add(PAGE_COMPARE, new CompareListFragment());
+        fragments.add(PAGE_RECORD_LIST, recordListFragment);
 
-        TabHost.TabSpec tabSpec1 = tabHost.newTabSpec("tab1");
-        tabSpec1.setIndicator("Time Now");
-        Bundle bundle1 = new Bundle();
-        bundle1.putString("name", "timeNow");
-        tabHost.addTab(tabSpec1, RecordListFragment.class, bundle1);
+        // fragment pager
+        FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return fragments.get(position);
+            }
 
-        TabHost.TabSpec tabSpec2 = tabHost.newTabSpec("tab2");
-        tabSpec2.setIndicator("Set Time");
-        Bundle bundle2 = new Bundle();
-        bundle2.putString("name", "setTime");
-        tabHost.addTab(tabSpec2, SearchListFragment.class, bundle2);
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return pageTitle[position];
+            }
+
+            @Override
+            public int getCount() {
+                return pageTitle.length;
+            }
+        };
+
+        // initialize view pager
+        binding.pager.setAdapter(adapter);
+        binding.pager.addOnPageChangeListener(this);
+        binding.pager.setCurrentItem(PAGE_RECORD_LIST); // as default page
+
+        // set view pager to tab
+        binding.tabs.setupWithViewPager(binding.pager);
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+    }
 }

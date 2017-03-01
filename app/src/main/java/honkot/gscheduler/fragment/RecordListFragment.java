@@ -40,6 +40,11 @@ public class RecordListFragment extends Fragment {
     public static final int RESULT_SUCCESS = 1;
     private FragmentRecordListBinding binding;
 
+    private OnItemClickListener listener;
+    public interface OnItemClickListener {
+        void onItemClick(CompareLocale compareLocale);
+    }
+
     @Inject
     CompareLocaleDao compareLocaleDao;
 
@@ -54,6 +59,10 @@ public class RecordListFragment extends Fragment {
         return binding.getRoot();
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,11 +74,15 @@ public class RecordListFragment extends Fragment {
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
-                // TODO Change to correct. This is temporary program for debug.
                 compareLocaleDao.changeBasis(compareLocale);
-                Intent intent = new Intent(getActivity(), CompareLocaleListActivity.class);
-//                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
-                startActivity(intent);
+                if (listener != null) {
+                    listener.onItemClick(compareLocale);
+
+                } else {
+                    // fail safe
+                    Intent intent = new Intent(getActivity(), CompareLocaleListActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         binding.recyclerView.setAdapter(myAdapter);

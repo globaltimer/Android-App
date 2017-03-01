@@ -37,7 +37,7 @@ public class CompareListFragment extends Fragment {
     private static final String TAG = "CompareListFragment";
     private static final int SHIFT_MINS = 30;
     private FragmentCompareListBinding binding;
-    private int offsetMinutes = 0;
+    private int offsetMinutes;
     private CompareLocale basisLocale;
 
     @Inject
@@ -50,10 +50,15 @@ public class CompareListFragment extends Fragment {
 
         binding = FragmentCompareListBinding.inflate(
                 getActivity().getLayoutInflater(), null, false);
-        basisLocale = compareLocaleDao.getBasisLocale();
+        initialize();
 
-        initView();
         return binding.getRoot();
+    }
+
+    public void initialize() {
+        basisLocale = compareLocaleDao.getBasisLocale();
+        offsetMinutes = 0;
+        initView();
     }
 
     @Override
@@ -68,7 +73,6 @@ public class CompareListFragment extends Fragment {
     }
 
     private void initView() {
-        //TODO 暫定。よっしーのViewとはここで繋げる
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
