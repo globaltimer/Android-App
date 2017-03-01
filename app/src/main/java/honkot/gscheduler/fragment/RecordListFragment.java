@@ -83,7 +83,7 @@ public class RecordListFragment extends Fragment {
                 } else {
                     compareLocaleDao.changeBasis(compareLocale);
                     MyRecAdapter myAdapter = (MyRecAdapter)binding.recyclerView.getAdapter();
-                    myAdapter.setDataAndUpdateList(compareLocaleDao.findAll());
+                    myAdapter.switchBasis(compareLocaleDao.findAll(), compareLocale);
                 }
             }
         });
