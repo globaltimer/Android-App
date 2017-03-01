@@ -67,6 +67,7 @@ public class CompareLocaleDao {
     }
 
     public void insert(final CompareLocale favorite) {
+        favorite.setBasis(findAll().isEmpty());
         orma.transactionNonExclusiveSync(new Runnable() {
             @Override
             public void run() {
