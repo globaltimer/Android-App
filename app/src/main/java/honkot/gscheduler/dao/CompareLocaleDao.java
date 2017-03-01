@@ -1,6 +1,10 @@
 package honkot.gscheduler.dao;
 
+import android.database.Cursor;
 import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -8,6 +12,7 @@ import javax.inject.Singleton;
 import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.CompareLocale_Deleter;
 import honkot.gscheduler.model.CompareLocale_Relation;
+import honkot.gscheduler.model.CompareLocale_Schema;
 import honkot.gscheduler.model.CompareLocale_Selector;
 import honkot.gscheduler.model.OrmaDatabase;
 
@@ -46,6 +51,19 @@ public class CompareLocaleDao {
 
     public CompareLocale getBasisLocale() {
         return relation().selector().basisEq(true).value();
+    }
+
+    public List<String> registerdCities() {
+        Cursor cr = relation().selector()
+                .executeWithColumns(CompareLocale_Schema.INSTANCE.locationName.name);
+        ArrayList<String> ret = new ArrayList<>();
+        if (cr.getCount() > 0) {
+            while (cr.moveToNext()) {
+                ret.add(cr.getString(0));
+            }
+        }
+
+        return ret;
     }
 
     public void insert(final CompareLocale favorite) {

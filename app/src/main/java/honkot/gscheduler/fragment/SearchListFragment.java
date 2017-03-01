@@ -95,6 +95,7 @@ public class SearchListFragment extends Fragment {
 
             List<HashMap<String, Object>> maps
                     = AdapterGenerater.getZones(getActivity());
+            List<String> registerdCities = compareLocaleDao.registerdCities();
             ArrayList<TmpTimeZone> tmpTimeZones = new ArrayList<>();
             for (HashMap<String, Object> map : maps) {
                 String name = (String)map.get("name");
@@ -102,7 +103,9 @@ public class SearchListFragment extends Fragment {
                 String id = (String)map.get("id");
                 int offset = (int)map.get("offset");
 
-                tmpTimeZones.add(new TmpTimeZone(name, gmt, id, offset));
+                if (!registerdCities.contains(name)) {
+                    tmpTimeZones.add(new TmpTimeZone(name, gmt, id, offset));
+                }
             }
 
             // insert all
