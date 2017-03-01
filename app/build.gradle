@@ -43,4 +43,5 @@ dependencies {
     annotationProcessor 'com.github.gfx.android.orma:orma-processor:4.1.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    compile 'com.android.support:design:25.1.1'
 }

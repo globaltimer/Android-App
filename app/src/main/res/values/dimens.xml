@@ -5,4 +5,7 @@
 
     <dimen name="searchView_margin">8dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_size_time">34dp</dimen>
+    <dimen name="text_size_date">14dp</dimen>
+    <dimen name="text_size_city">26dp</dimen>
 </resources>
