@@ -5,7 +5,6 @@ import android.os.Bundle;
 import honkot.gscheduler.fragment.RecordListFragment;
 
 public class ListActivity extends BaseActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

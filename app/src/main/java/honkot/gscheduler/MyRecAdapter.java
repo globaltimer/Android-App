@@ -92,5 +92,4 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         items.remove(item);
         notifyItemRemoved(position);
     }
-
 }

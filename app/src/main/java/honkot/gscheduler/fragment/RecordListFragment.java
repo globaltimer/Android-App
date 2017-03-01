@@ -1,6 +1,5 @@
 package honkot.gscheduler.fragment;
 
-
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -34,9 +33,6 @@ import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentRecordListBinding;
 import honkot.gscheduler.model.CompareLocale;
 
-/**
- * Created by hiroki on 2017-02-24.
- */
 public class RecordListFragment extends Fragment {
 
     private static final String TAG = "RecordListFragment";
@@ -119,7 +115,6 @@ public class RecordListFragment extends Fragment {
         }
     }
 
-
     private void setUpItemTouchHelper() {
         ItemTouchHelper.SimpleCallback touchHelper = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -139,7 +134,6 @@ public class RecordListFragment extends Fragment {
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
-
 
                 Drawable background = new ColorDrawable(Color.RED);
                 Drawable binIcon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_black_24dp);
