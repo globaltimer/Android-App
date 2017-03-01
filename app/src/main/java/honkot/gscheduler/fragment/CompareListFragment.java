@@ -20,12 +20,12 @@ import org.threeten.bp.ZonedDateTime;
 
 import javax.inject.Inject;
 
-import honkot.gscheduler.utils.MyRecAdapter;
 import honkot.gscheduler.R;
 import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentCompareListBinding;
 import honkot.gscheduler.model.CompareLocale;
+import honkot.gscheduler.utils.MyRecAdapter;
 
 /**
  * Created by hiroki on 2017-02-25.
@@ -55,6 +55,8 @@ public class CompareListFragment extends Fragment {
 
     public void initialize() {
         basisLocale = compareLocaleDao.getBasisLocale();
+        basisLocale.setZonedDateTimeNow();
+
         if (basisLocale != null) {
             offsetMinutes = 0;
             initView();

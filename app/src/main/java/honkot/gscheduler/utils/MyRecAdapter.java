@@ -102,10 +102,13 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     }
 
     public CompareLocale getItemForPosition(int position) {
-        if (mDataCash.get(position) == null) {
+        CompareLocale compareLocale = mDataCash.get(position);
+        if (compareLocale == null) {
+            compareLocale = selector.get(position);
+            compareLocale.setZonedDateTimeNow();
             mDataCash.put(position, selector.get(position));
         }
-        return mDataCash.get(position);
+        return compareLocale;
     }
 
     public interface OnItemClickListener {
