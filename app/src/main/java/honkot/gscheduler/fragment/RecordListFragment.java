@@ -74,14 +74,19 @@ public class RecordListFragment extends Fragment {
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
-                compareLocaleDao.changeBasis(compareLocale);
-                if (listener != null) {
-                    listener.onItemClick(compareLocale);
+                if (compareLocale.isBasis()) {
+                    if (listener != null) {
+                        listener.onItemClick(compareLocale);
 
+                    } else {
+                        // fail safe
+                        Intent intent = new Intent(getActivity(), CompareLocaleListActivity.class);
+                        startActivity(intent);
+                    }
                 } else {
-                    // fail safe
-                    Intent intent = new Intent(getActivity(), CompareLocaleListActivity.class);
-                    startActivity(intent);
+                    compareLocaleDao.changeBasis(compareLocale);
+                    MyRecAdapter myAdapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+                    myAdapter.setDataAndUpdateList(compareLocaleDao.findAll());
                 }
             }
         });

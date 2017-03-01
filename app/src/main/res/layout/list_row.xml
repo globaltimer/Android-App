@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="compareLocale"
             type="honkot.gscheduler.model.ListBindingInterface" />
@@ -10,9 +11,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="90dip"
+        android:layout_height="wrap_content"
         android:id="@+id/rowRoot"
-        android:baselineAligned="true"
         android:background="@drawable/border">
 
         <LinearLayout
@@ -22,46 +22,60 @@
             android:clickable="true"
             android:focusable="true"
             android:background="?android:attr/selectableItemBackground"
-            android:paddingBottom="10sp"
-            android:paddingTop="10sp"
-            android:paddingLeft="16sp"
-            android:paddingRight="16sp">
+            android:layout_margin="@dimen/activity_horizontal_margin">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="239dp"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1">
 
-                <TextView android:id="@+id/cityTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@{compareLocale.displayCity}"
-                    android:textSize="@dimen/text_size_city" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/adjust_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                <TextView android:id="@+id/dateTextView"
+                    <ImageView
+                        android:src="@mipmap/ic_launcher"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center_vertical"
+                        android:visibility="@{compareLocale.basis ? View.VISIBLE : View.GONE}"/>
+
+                    <TextView
+                        android:id="@+id/cityTextView"
+                        android:layout_marginTop="@dimen/adjust_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="Tokyo/Japan"
+                        android:text="@{compareLocale.displayCity}"
+                        android:gravity="bottom"
+                        android:textSize="@dimen/text_size_city" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/dateTextView"
+                    android:layout_marginTop="@dimen/adjust_margin"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
-                    android:layout_below="@android:id/text1"
-                    android:layout_alignStart="@android:id/text1"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_height="wrap_content"
+                    tools:text="2017-03-01"
                     android:text="@{compareLocale.displayDate}"
-                    android:textSize="@dimen/text_size_date"
-                    android:layout_alignLeft="@android:id/text1"/>
+                    android:gravity="top"
+                    android:textSize="@dimen/text_size_date"/>
             </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
+                tools:text="14:00"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/timeTextView"
                 android:text="@{compareLocale.displayTime}"
-                android:layout_weight="6.72"
                 android:typeface="sans"
                 android:textSize="@dimen/text_size_time"
-                android:lineSpacingExtra="10sp"
                 android:textColor="@color/colorEmerald"
-                android:gravity="right" />
+                android:gravity="center_vertical" />
         </LinearLayout>
     </LinearLayout>
 

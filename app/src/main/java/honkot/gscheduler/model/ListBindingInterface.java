@@ -9,4 +9,5 @@ public interface ListBindingInterface {
     String getDisplayDate();
     String getDisplayTime();
     String getDisplayGMT();
+    boolean isBasis();
 }

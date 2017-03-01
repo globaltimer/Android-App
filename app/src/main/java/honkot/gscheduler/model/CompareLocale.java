@@ -72,6 +72,7 @@ public class CompareLocale implements ListBindingInterface {
 
     @Getter
     @NonNull
+    @Override
     public boolean isBasis() {
         return basis;
     }

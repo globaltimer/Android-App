@@ -75,7 +75,7 @@ public class TabActivity extends BaseActivity implements
                 getResources().getColor(R.color.colorPrimary));     // bar color
         binding.tabs.setSelectedTabIndicatorHeight(10);             // bar height
         binding.tabs.setTabTextColors(
-                getResources().getColor(R.color.colorGray),      // normal text color
+                getResources().getColor(R.color.colorGray),         // normal text color
                 getResources().getColor(R.color.colorPrimary));     // selected text color
 
     }
