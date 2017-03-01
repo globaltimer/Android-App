@@ -50,7 +50,7 @@ public class CompareLocaleDao {
     }
 
     public CompareLocale getBasisLocale() {
-        return relation().selector().basisEq(true).value();
+        return relation().selector().basisEq(true).valueOrNull();
     }
 
     public List<String> registerdCities() {

@@ -101,7 +101,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         return mSelectorCount;
     }
 
-    private CompareLocale getItemForPosition(int position) {
+    public CompareLocale getItemForPosition(int position) {
         if (mDataCash.get(position) == null) {
             mDataCash.append(position, selector.get(position));
         }
@@ -112,7 +112,27 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         void onItemClicked(CompareLocale compareLocale);
     }
 
-    public void remove(int position) {
+    /**
+     * ここに入る前に該当レコードはDBから削除されていることを大前提とする。
+     * そのままnotifyDataSetChangedをするとアニメーションがされなくなってしまう。
+     * それを防ぐために、新しいselectorの差し替えと、キャッシュだけを差し替えるようにする。
+     * キャッシュの差し替えとは具体的に、position以降のCompareLocaleのpositionをズラすだけ。
+     * @param position
+     */
+    public void remove(CompareLocale_Selector newSelector, int position) {
         notifyItemRemoved(position);
+
+        setSelector(newSelector, false);
+        SparseArray<CompareLocale> newCash = new SparseArray<>();
+        for (int i = 0; i < mDataCash.size(); i++) {
+            CompareLocale tmpLocale = mDataCash.get(position);
+            if (i < position) {
+                if (tmpLocale != null)
+                    newCash.append(i, tmpLocale);
+            } else if (i > position) {
+                if (tmpLocale != null)
+                    newCash.append(i - 1, tmpLocale);
+            }
+        }
     }
 }

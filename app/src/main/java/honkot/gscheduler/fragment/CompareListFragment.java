@@ -55,8 +55,10 @@ public class CompareListFragment extends Fragment {
 
     public void initialize() {
         basisLocale = compareLocaleDao.getBasisLocale();
-        offsetMinutes = 0;
-        initView();
+        if (basisLocale != null) {
+            offsetMinutes = 0;
+            initView();
+        }
     }
 
     @Override
