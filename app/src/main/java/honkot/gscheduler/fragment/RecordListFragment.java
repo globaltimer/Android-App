@@ -83,7 +83,7 @@ public class RecordListFragment extends Fragment {
                 } else {
                     compareLocaleDao.changeBasis(compareLocale);
                     MyRecAdapter myAdapter = (MyRecAdapter)binding.recyclerView.getAdapter();
-                    myAdapter.setDataAndUpdateList(compareLocaleDao.findAll());
+                    myAdapter.switchBasis(compareLocaleDao.findAll(), compareLocale);
                 }
             }
         });
@@ -143,7 +143,10 @@ public class RecordListFragment extends Fragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
-                myAdapter.remove(swipedPosition);
+                CompareLocale removeLocale = myAdapter.getItemForPosition(swipedPosition);
+                compareLocaleDao.remove(removeLocale);
+
+                myAdapter.remove(compareLocaleDao.findAll(), swipedPosition);
             }
 
             @Override

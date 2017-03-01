@@ -22,7 +22,7 @@
             android:clickable="true"
             android:focusable="true"
             android:background="?android:attr/selectableItemBackground"
-            android:layout_margin="@dimen/activity_horizontal_margin">
+            android:padding="@dimen/activity_horizontal_margin">
 
             <LinearLayout
                 android:orientation="vertical"
