@@ -1,4 +1,4 @@
-package honkot.gscheduler;
+package honkot.gscheduler.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
+import honkot.gscheduler.GlobalTimerApplication;
 import honkot.gscheduler.di.AppComponent;
 
 public class BaseActivity extends AppCompatActivity {

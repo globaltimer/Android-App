@@ -3,7 +3,6 @@ package honkot.gscheduler.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,10 +20,9 @@ import org.threeten.bp.ZonedDateTime;
 
 import javax.inject.Inject;
 
-import honkot.gscheduler.BaseActivity;
-import honkot.gscheduler.MainActivity;
-import honkot.gscheduler.MyRecAdapter;
+import honkot.gscheduler.utils.MyRecAdapter;
 import honkot.gscheduler.R;
+import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentCompareListBinding;
 import honkot.gscheduler.model.CompareLocale;
@@ -77,9 +75,9 @@ public class CompareListFragment extends Fragment {
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale) {
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
-                startActivity(intent);
+//                Intent intent = new Intent(getActivity(), MainActivity.class);
+//                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
+//                startActivity(intent);
             }
         }, new OffsetMinsGetter() {
             @Override

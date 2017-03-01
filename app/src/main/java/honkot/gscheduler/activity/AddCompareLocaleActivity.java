@@ -1,4 +1,4 @@
-package honkot.gscheduler;
+package honkot.gscheduler.activity;
 
 import android.os.Bundle;
 

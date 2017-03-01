@@ -24,11 +24,10 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import honkot.gscheduler.AddCompareLocaleActivity;
-import honkot.gscheduler.BaseActivity;
-import honkot.gscheduler.CompareLocaleListActivity;
-import honkot.gscheduler.MyRecAdapter;
+import honkot.gscheduler.utils.MyRecAdapter;
 import honkot.gscheduler.R;
+import honkot.gscheduler.activity.AddCompareLocaleActivity;
+import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentRecordListBinding;
 import honkot.gscheduler.model.CompareLocale;
@@ -79,9 +78,7 @@ public class RecordListFragment extends Fragment {
                         listener.onItemClick(compareLocale);
 
                     } else {
-                        // fail safe
-                        Intent intent = new Intent(getActivity(), CompareLocaleListActivity.class);
-                        startActivity(intent);
+                        Log.e(TAG, "onItemClick can not catch event " + compareLocale.toString());
                     }
                 } else {
                     compareLocaleDao.changeBasis(compareLocale);

@@ -24,8 +24,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import honkot.gscheduler.BaseActivity;
 import honkot.gscheduler.R;
+import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.dao.TmpTimeZoneDao;
 import honkot.gscheduler.databinding.FragmentSearchListBinding;
