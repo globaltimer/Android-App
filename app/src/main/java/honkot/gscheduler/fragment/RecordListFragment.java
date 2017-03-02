@@ -24,13 +24,13 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import honkot.gscheduler.utils.MyRecAdapter;
 import honkot.gscheduler.R;
 import honkot.gscheduler.activity.AddCompareLocaleActivity;
 import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentRecordListBinding;
 import honkot.gscheduler.model.CompareLocale;
+import honkot.gscheduler.utils.MyRecAdapter;
 
 public class RecordListFragment extends Fragment {
 
@@ -108,6 +108,8 @@ public class RecordListFragment extends Fragment {
         inflater.inflate(R.menu.menu, menu);
     }
 
+    private boolean editMode = false;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -118,15 +120,15 @@ public class RecordListFragment extends Fragment {
                 return true;
 
             case R.id.action_edit:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
+                MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+                editMode = !editMode;
+                adapter.changeRow(editMode);
                 return true;
 
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 

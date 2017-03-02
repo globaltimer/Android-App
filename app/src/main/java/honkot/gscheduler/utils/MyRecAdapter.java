@@ -5,6 +5,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,10 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     private int mSelectorCount;
     private ArrayList<MyViewHolder> mViewHolders = new ArrayList<>();
     private SparseArray<CompareLocale> mDataCash = new SparseArray<>();
+
+    //checkbox layout!
+    private static CheckBox lastChecked = null;
+    private static int lastCheckedPos = 0;
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener) {
         this.listener = listener;
@@ -64,16 +69,26 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         return holder;
     }
 
+
+
     // inner class to hold a reference to each item of RecyclerView
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final ListRowBinding binding;
         private CompareLocale compareLocale;
 
-        private MyViewHolder(ListRowBinding binding) {
+        private MyViewHolder(final ListRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             this.binding.rowClickView.setOnClickListener(this);
+            binding.deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    remove(selector, getAdapterPosition());
+                }
+            });
+//            this.binding.editRow.setOnClickListener(this);
+
         }
 
         @Override
@@ -94,6 +109,16 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         }
 
         holder.binding.setCompareLocale(item);
+
+    }
+
+    public void changeRow(boolean isEdit) {
+        for (MyViewHolder holder : mViewHolders) {
+            holder.binding.rowClickView.setVisibility(
+                    isEdit ? View.GONE : View.VISIBLE);
+            holder.binding.editRow.setVisibility(
+                    isEdit ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -111,6 +136,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     public interface OnItemClickListener {
         void onItemClicked(CompareLocale compareLocale);
     }
+
 
     /**
      * ここに入る前に該当レコードはDBから削除されていることを大前提とする。
@@ -134,5 +160,6 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
                     newCash.append(i - 1, tmpLocale);
             }
         }
+        mDataCash = newCash;
     }
 }
