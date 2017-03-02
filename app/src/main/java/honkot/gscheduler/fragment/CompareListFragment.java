@@ -76,7 +76,7 @@ public class CompareListFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAllExceptBasis(), new MyRecAdapter.OnItemClickListener() {
             @Override
-            public void onItemClicked(CompareLocale compareLocale) {
+            public void onItemClicked(CompareLocale compareLocale, int position) {
 //                Intent intent = new Intent(getActivity(), MainActivity.class);
 //                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
 //                startActivity(intent);

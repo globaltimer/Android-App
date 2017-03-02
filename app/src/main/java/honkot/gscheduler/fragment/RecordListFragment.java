@@ -72,7 +72,7 @@ public class RecordListFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
-            public void onItemClicked(CompareLocale compareLocale) {
+            public void onItemClicked(CompareLocale compareLocale, int position) {
                 if (compareLocale.isBasis()) {
                     if (listener != null) {
                         listener.onItemClick(compareLocale);
@@ -82,9 +82,18 @@ public class RecordListFragment extends Fragment {
                     }
                 } else {
                     compareLocaleDao.changeBasis(compareLocale);
-                    MyRecAdapter myAdapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+                    MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                     myAdapter.switchBasis(compareLocaleDao.findAll(), compareLocale);
                 }
+            }
+        }, new MyRecAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(CompareLocale compareLocale, int position) {
+                MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
+                CompareLocale removeLocale = myAdapter.getItemForPosition(position);
+                compareLocaleDao.remove(removeLocale);
+
+                myAdapter.remove(compareLocaleDao.findAll(), position);
             }
         });
         binding.recyclerView.setAdapter(myAdapter);
