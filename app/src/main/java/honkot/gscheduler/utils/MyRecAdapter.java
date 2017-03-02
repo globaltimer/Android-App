@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.ArrayList;
 
 import honkot.gscheduler.databinding.ListRowBinding;
@@ -19,6 +22,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     private OnItemClickListener listener;
     private CompareListFragment.OffsetMinsGetter offsetMinsGetter;
     private int mSelectorCount;
+    private ZonedDateTime startTime;
     private ArrayList<MyViewHolder> mViewHolders = new ArrayList<>();
     private SparseArray<CompareLocale> mDataCash = new SparseArray<>();
 
@@ -28,9 +32,10 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     }
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener
-            , CompareListFragment.OffsetMinsGetter offsetMinsGetter) {
+            ,CompareListFragment.OffsetMinsGetter offsetMinsGetter) {
         this(selector, listener);
         this.offsetMinsGetter = offsetMinsGetter;
+        startTime = ZonedDateTime.now(ZoneId.systemDefault()).withSecond(0).withNano(0);
     }
 
     public void setDataAndUpdateList(CompareLocale_Selector selector) {
@@ -105,9 +110,10 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         CompareLocale compareLocale = mDataCash.get(position);
         if (compareLocale == null) {
             compareLocale = selector.get(position);
-            compareLocale.setZonedDateTimeNow();
             mDataCash.put(position, selector.get(position));
         }
+        compareLocale.setZonedDateTime(
+                startTime.withZoneSameInstant(compareLocale.getZonedDateTime().getZone()));
         return compareLocale;
     }
 

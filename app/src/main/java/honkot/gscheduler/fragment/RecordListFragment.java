@@ -7,6 +7,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -22,15 +25,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+
 import javax.inject.Inject;
 
-import honkot.gscheduler.utils.MyRecAdapter;
 import honkot.gscheduler.R;
 import honkot.gscheduler.activity.AddCompareLocaleActivity;
 import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentRecordListBinding;
 import honkot.gscheduler.model.CompareLocale;
+import honkot.gscheduler.utils.MyRecAdapter;
 
 public class RecordListFragment extends Fragment {
 
@@ -38,6 +44,10 @@ public class RecordListFragment extends Fragment {
     private static final int REQUEST_CODE = 1;
     public static final int RESULT_SUCCESS = 1;
     private FragmentRecordListBinding binding;
+
+    private int offsetMins = 0;
+    private ZonedDateTime startTime = ZonedDateTime.now(ZoneId.systemDefault()).withSecond(0).withNano(0);
+    private Handler timeCountHandler;
 
     private OnItemClickListener listener;
     public interface OnItemClickListener {
@@ -55,6 +65,7 @@ public class RecordListFragment extends Fragment {
         binding = FragmentRecordListBinding.inflate(
                 getActivity().getLayoutInflater(), null, false);
         initView();
+        initHandler();
         return binding.getRoot();
     }
 
@@ -66,6 +77,30 @@ public class RecordListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateTime();
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+        long nowSec = now.toEpochSecond();
+
+        timeCountHandler.sendEmptyMessageDelayed(0,
+                (now.withSecond(0).withNano(0).plusMinutes(1).toEpochSecond() - nowSec ) * 1000);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        timeCountHandler.removeMessages(0);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timeCountHandler = null;
     }
 
     private void initView() {
@@ -82,9 +117,14 @@ public class RecordListFragment extends Fragment {
                     }
                 } else {
                     compareLocaleDao.changeBasis(compareLocale);
-                    MyRecAdapter myAdapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+                    MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                     myAdapter.switchBasis(compareLocaleDao.findAll(), compareLocale);
                 }
+            }
+        }, new CompareListFragment.OffsetMinsGetter() {
+            @Override
+            public int getOffsetMins() {
+                return offsetMins;
             }
         });
         binding.recyclerView.setAdapter(myAdapter);
@@ -180,5 +220,33 @@ public class RecordListFragment extends Fragment {
 
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(touchHelper);
         mItemTouchHelper.attachToRecyclerView(binding.recyclerView);
+    }
+
+    private void initHandler() {
+        HandlerThread handlerThread = new HandlerThread("time_counter");
+        handlerThread.start();
+        timeCountHandler = new Handler(handlerThread.getLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+                if (msg.what == 0) {
+                    updateTime();
+                    timeCountHandler.sendEmptyMessageDelayed(0, 60 * 1000);
+                }
+            }
+        };
+    }
+
+    private void updateTime() {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+        offsetMins = (int)((now.toEpochSecond() - startTime.toEpochSecond()) / 60);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MyRecAdapter myAdapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+                myAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }
