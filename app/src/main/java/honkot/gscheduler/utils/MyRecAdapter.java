@@ -128,7 +128,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     public CompareLocale getItemForPosition(int position) {
         if (mDataCash.get(position) == null) {
-            mDataCash.append(position, selector.get(position));
+            mDataCash.put(position, selector.get(position));
         }
         return mDataCash.get(position);
     }
@@ -143,15 +143,15 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
      * そのままnotifyDataSetChangedをするとアニメーションがされなくなってしまう。
      * それを防ぐために、新しいselectorの差し替えと、キャッシュだけを差し替えるようにする。
      * キャッシュの差し替えとは具体的に、position以降のCompareLocaleのpositionをズラすだけ。
+     * @param newSelector
      * @param position
      */
     public void remove(CompareLocale_Selector newSelector, int position) {
         notifyItemRemoved(position);
-
         setSelector(newSelector, false);
         SparseArray<CompareLocale> newCash = new SparseArray<>();
         for (int i = 0; i < mDataCash.size(); i++) {
-            CompareLocale tmpLocale = mDataCash.get(position);
+            CompareLocale tmpLocale = mDataCash.get(i);
             if (i < position) {
                 if (tmpLocale != null)
                     newCash.append(i, tmpLocale);
@@ -160,6 +160,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
                     newCash.append(i - 1, tmpLocale);
             }
         }
+
         mDataCash = newCash;
     }
 }
