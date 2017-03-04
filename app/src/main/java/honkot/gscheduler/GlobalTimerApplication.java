@@ -3,7 +3,6 @@ package honkot.gscheduler;
 import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.multidex.MultiDex;
 
 import honkot.gscheduler.di.AppComponent;
 import honkot.gscheduler.di.AppModule;
@@ -20,7 +19,6 @@ public class GlobalTimerApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
     }
 
     @Override
