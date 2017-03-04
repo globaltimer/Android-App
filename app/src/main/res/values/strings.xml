@@ -11,4 +11,5 @@
       <item>Time Now</item>
       <item>Set Time</item>
   </string-array>
+  <string name="title_bar">DONE</string>
 </resources>

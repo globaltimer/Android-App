@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import honkot.gscheduler.R;
 import honkot.gscheduler.databinding.ListRowBinding;
 import honkot.gscheduler.fragment.CompareListFragment;
 import honkot.gscheduler.model.CompareLocale;
@@ -17,19 +18,23 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     private CompareLocale_Selector selector;
     private OnItemClickListener listener;
+    private OnItemClickListener deleteButtonListener;
     private CompareListFragment.OffsetMinsGetter offsetMinsGetter;
     private int mSelectorCount;
     private ArrayList<MyViewHolder> mViewHolders = new ArrayList<>();
     private SparseArray<CompareLocale> mDataCash = new SparseArray<>();
 
-    public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener) {
+
+    public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener,
+                        OnItemClickListener deleteButtonListener) {
         this.listener = listener;
+        this.deleteButtonListener = deleteButtonListener;
         setSelector(selector, true);
     }
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener
             , CompareListFragment.OffsetMinsGetter offsetMinsGetter) {
-        this(selector, listener);
+        this(selector, listener, listener); // TODO
         this.offsetMinsGetter = offsetMinsGetter;
     }
 
@@ -69,18 +74,35 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
         private final ListRowBinding binding;
         private CompareLocale compareLocale;
+        private int position;
 
-        private MyViewHolder(ListRowBinding binding) {
+
+        private MyViewHolder(final ListRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             this.binding.rowClickView.setOnClickListener(this);
+            this.binding.editRow.setOnClickListener(this);
+            this.binding.deleteBtn.setOnClickListener(this);
+
         }
 
         @Override
         public void onClick(View view) {
-            if (listener != null) {
-                listener.onItemClicked(
-                        getItemForPosition(getLayoutPosition()));
+            switch (view.getId()) {
+                case R.id.editRow:
+                case R.id.rowClickView:
+                    if (listener != null) {
+                        listener.onItemClicked(
+                                getItemForPosition(getLayoutPosition()), position);
+                    }
+                    break;
+                case R.id.deleteBtn:
+                    if (deleteButtonListener != null) {
+                        deleteButtonListener.onItemClicked(
+                                getItemForPosition(getLayoutPosition()), position);
+                    }
+                    break;
+
             }
         }
     }
@@ -89,11 +111,22 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         CompareLocale item = getItemForPosition(position);
         holder.compareLocale = item;
+        holder.position = position;
         if (offsetMinsGetter != null) {
             item.setOffsetMins(offsetMinsGetter.getOffsetMins());
         }
 
         holder.binding.setCompareLocale(item);
+
+    }
+
+    public void changeRow(boolean isEdit) {
+        for (MyViewHolder holder : mViewHolders) {
+            holder.binding.rowClickView.setVisibility(
+                    isEdit ? View.GONE : View.VISIBLE);
+            holder.binding.editRow.setVisibility(
+                    isEdit ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -109,8 +142,9 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     }
 
     public interface OnItemClickListener {
-        void onItemClicked(CompareLocale compareLocale);
+        void onItemClicked(CompareLocale compareLocale, int position);
     }
+
 
     /**
      * ここに入る前に該当レコードはDBから削除されていることを大前提とする。

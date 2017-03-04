@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="android.view.View" />
+
+        <import type="android.view.View"/>
         <variable
             name="compareLocale"
             type="honkot.gscheduler.model.ListBindingInterface" />
@@ -12,8 +14,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:id="@+id/rowRoot"
         android:background="@drawable/border">
+
 
         <LinearLayout
             android:id="@+id/rowClickView"
@@ -77,6 +81,93 @@
                 android:textColor="@color/colorEmerald"
                 android:gravity="center_vertical" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="0dp"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:id="@+id/editRow">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/radioButton"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:buttonTint="@color/colorEmerald"
+                    android:checked="@{compareLocale.basis ? true : false}"
+                    android:gravity="center_vertical"
+                    android:layout_margin="14dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_weight="0.08"
+                android:layout_width="174dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/adjust_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <!--android:visibility="@{compareLocale.basis ? View.VISIBLE : View.GONE}"/>-->
+
+                    <TextView
+                        android:layout_marginTop="@dimen/adjust_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="Tokyo/Japan"
+                        android:text="@{compareLocale.displayCity}"
+                        android:gravity="bottom"
+                        android:textSize="@dimen/text_size_city" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_marginTop="@dimen/adjust_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="2017-03-01"
+                    android:text="@{compareLocale.displayDate}"
+                    android:gravity="top"
+                    android:textSize="@dimen/text_size_date"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="90dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/holo_red_dark"
+                android:id="@+id/deleteBtn"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_delete_black_24dp"
+                    android:tint="@android:color/background_light"
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </layout>

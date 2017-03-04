@@ -6,12 +6,17 @@
         android:id="@+id/action_add"
         android:icon="@drawable/ic_action_name"
         android:title="AddIcon"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_edit"
         android:icon="@drawable/ic_create_black_24dp"
         android:title="Edit"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_done"
+        android:title="@string/title_bar"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
 </menu>
