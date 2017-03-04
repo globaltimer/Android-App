@@ -15,7 +15,8 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/adtion_done"
+        android:id="@+id/action_done"
         android:title="@string/title_bar"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

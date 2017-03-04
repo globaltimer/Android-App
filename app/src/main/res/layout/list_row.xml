@@ -5,8 +5,7 @@
 
     <data>
 
-        <import type="android.view.View"
-            android:id="@+id/import1" />
+        <import type="android.view.View"/>
         <variable
             name="compareLocale"
             type="honkot.gscheduler.model.ListBindingInterface" />
