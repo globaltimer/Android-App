@@ -106,6 +106,8 @@
                     android:id="@+id/radioButton"
                     android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:clickable="false"
+                    android:focusable="false"
                     app:buttonTint="@color/colorEmerald"
                     android:checked="@{compareLocale.basis ? true : false}"
                     android:gravity="center_vertical"

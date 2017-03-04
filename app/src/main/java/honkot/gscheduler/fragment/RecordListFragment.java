@@ -80,7 +80,7 @@ public class RecordListFragment extends Fragment {
                     } else {
                         Log.e(TAG, "onItemClick can not catch event " + compareLocale.toString());
                     }
-                } else {
+                } else if (!editMode) {
                     compareLocaleDao.changeBasis(compareLocale);
                     MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                     myAdapter.switchBasis(compareLocaleDao.findAll(), compareLocale);
@@ -92,7 +92,6 @@ public class RecordListFragment extends Fragment {
                 MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                 CompareLocale removeLocale = myAdapter.getItemForPosition(position);
                 compareLocaleDao.remove(removeLocale);
-
                 myAdapter.remove(compareLocaleDao.findAll(), position);
             }
         });
@@ -115,9 +114,11 @@ public class RecordListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        addMenu = menu.findItem(R.id.action_add);
     }
 
     private boolean editMode = false;
+    private MenuItem addMenu;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -132,6 +133,8 @@ public class RecordListFragment extends Fragment {
                 MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
                 editMode = !editMode;
                 adapter.changeRow(editMode);
+
+                addMenu.setVisible(!editMode);
                 return true;
 
             default:
@@ -156,7 +159,6 @@ public class RecordListFragment extends Fragment {
                 MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                 CompareLocale removeLocale = myAdapter.getItemForPosition(swipedPosition);
                 compareLocaleDao.remove(removeLocale);
-
                 myAdapter.remove(compareLocaleDao.findAll(), swipedPosition);
             }
 

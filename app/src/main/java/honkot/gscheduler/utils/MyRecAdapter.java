@@ -5,7 +5,6 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 
 import java.util.ArrayList;
 
@@ -25,11 +24,9 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     private ArrayList<MyViewHolder> mViewHolders = new ArrayList<>();
     private SparseArray<CompareLocale> mDataCash = new SparseArray<>();
 
-    //checkbox layout!
-    private static CheckBox lastChecked = null;
-    private static int lastCheckedPos = 0;
 
-    public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener, OnItemClickListener deleteButtonListener) {
+    public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener,
+                        OnItemClickListener deleteButtonListener) {
         this.listener = listener;
         this.deleteButtonListener = deleteButtonListener;
         setSelector(selector, true);
@@ -37,7 +34,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener
             , CompareListFragment.OffsetMinsGetter offsetMinsGetter) {
-        this(selector, listener, listener);
+        this(selector, listener, listener); // TODO
         this.offsetMinsGetter = offsetMinsGetter;
     }
 
@@ -72,8 +69,6 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         return holder;
     }
 
-
-
     // inner class to hold a reference to each item of RecyclerView
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -81,18 +76,20 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         private CompareLocale compareLocale;
         private int position;
 
+
         private MyViewHolder(final ListRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             this.binding.rowClickView.setOnClickListener(this);
-            binding.deleteBtn.setOnClickListener(this);
-//            this.binding.editRow.setOnClickListener(this);
+            this.binding.editRow.setOnClickListener(this);
+            this.binding.deleteBtn.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
+                case R.id.editRow:
                 case R.id.rowClickView:
                     if (listener != null) {
                         listener.onItemClicked(
@@ -104,8 +101,9 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
                         deleteButtonListener.onItemClicked(
                                 getItemForPosition(getLayoutPosition()), position);
                     }
-            }
+                    break;
 
+            }
         }
     }
 
