@@ -118,7 +118,7 @@ public class CompareListFragment extends Fragment {
             // Calculate current offset time
             ZonedDateTime basisDateTime = basisLocale.getZonedDateTime().plusMinutes(offsetMinutes);
 
-            new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            new DatePickerDialog(getContext(), R.style.DatePickerTheme, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, final int year, final int monthOfYear, final int dayOfMonth) {
                     ZonedDateTime selectDate = basisLocale.getZonedDateTime()
@@ -139,7 +139,7 @@ public class CompareListFragment extends Fragment {
             // Calculate current offset time
             ZonedDateTime basisDateTime = basisLocale.getZonedDateTime().plusMinutes(offsetMinutes);
 
-            new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            new TimePickerDialog(getContext(), R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, final int hour, final int minute) {
                     ZonedDateTime selectTime = basisLocale.getZonedDateTime()
