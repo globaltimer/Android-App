@@ -20,12 +20,12 @@ import org.threeten.bp.ZonedDateTime;
 
 import javax.inject.Inject;
 
-import honkot.gscheduler.utils.MyRecAdapter;
 import honkot.gscheduler.R;
 import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentCompareListBinding;
 import honkot.gscheduler.model.CompareLocale;
+import honkot.gscheduler.utils.MyRecAdapter;
 
 /**
  * Created by hiroki on 2017-02-25.
@@ -179,9 +179,10 @@ public class CompareListFragment extends Fragment {
                 }
                 sb.append(" ");
             }
-            sb.append(hour).append(":").append(String.format("%02d", minutes)).append(" hours in the ");
+            
+            sb.append(hour).append(":").append(String.format("%02d", minutes));
+            sb.append(" hours in the ");
             sb.append(offsetMinutes > 0 ? "future" : "past");
-
             binding.futureMsgTextView.setText(sb.toString());
         }
 

@@ -146,35 +146,40 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:text="@string/leftArrow"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:textColor="@color/colorEmerald"/>
 
                 <TextView
                     android:id="@+id/basisPreviousTimeTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    tools:text="14:48"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    tools:text="14:48" />
 
                 <TextView
                     android:id="@+id/basisCurrentTimeTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:text="@{compareLocale.getDisplayTime()}"
-                    tools:text="15:18"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="@{compareLocale.getDisplayTime()}"
+                    android:textColor="@color/colorEmerald"
+                    android:textStyle="bold"
+                    tools:text="15:18" />
 
                 <TextView
                     android:id="@+id/basisNextTimeTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    tools:text="15:48"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    tools:text="15:48" />
 
                 <TextView
                     android:id="@+id/shiftRightButton"
@@ -182,7 +187,10 @@
                     android:layout_height="wrap_content"
                     android:text="@string/rightArrow"
                     android:layout_weight="1"
-                    android:gravity="right"/>
+                    android:gravity="right"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorEmerald"/>
             </LinearLayout>
         </LinearLayout>
 
