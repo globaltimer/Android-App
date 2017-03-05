@@ -42,7 +42,8 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:src="@mipmap/ic_launcher"
+                        android:src="@drawable/ic_location_on_black_24dp"
+                        android:tint="@color/colorEmerald"
                         android:layout_width="26dp"
                         android:layout_height="26dp"
                         android:layout_gravity="center_vertical"
@@ -67,6 +68,7 @@
                     tools:text="2017-03-01"
                     android:text="@{compareLocale.displayDate}"
                     android:gravity="top"
+                    android:textColor="@color/colorRouge"
                     android:textSize="@dimen/text_size_date"/>
             </LinearLayout>
 
@@ -83,87 +85,87 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/editRow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:baselineAligned="false"
             android:clickable="true"
             android:focusable="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:padding="0dp"
             android:visibility="gone"
-            android:orientation="horizontal"
-            android:baselineAligned="false"
-            android:id="@+id/editRow">
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <RadioButton
+                    android:id="@+id/radioButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/radioButton"
-                    android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:layout_margin="14dp"
+                    android:layout_weight="1"
+                    android:checked="@{compareLocale.basis ? true : false}"
                     android:clickable="false"
                     android:focusable="false"
-                    app:buttonTint="@color/colorEmerald"
-                    android:checked="@{compareLocale.basis ? true : false}"
                     android:gravity="center_vertical"
-                    android:layout_margin="14dp" />
+                    app:buttonTint="@color/colorEmerald" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:orientation="vertical"
+                android:layout_width="174dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:layout_weight="0.08"
-                android:layout_width="174dp">
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="@dimen/adjust_margin"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/adjust_margin"
+                    android:orientation="horizontal">
 
                     <!--android:visibility="@{compareLocale.basis ? View.VISIBLE : View.GONE}"/>-->
 
                     <TextView
-                        android:layout_marginTop="@dimen/adjust_margin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:text="Tokyo/Japan"
-                        android:text="@{compareLocale.displayCity}"
+                        android:layout_marginTop="@dimen/adjust_margin"
                         android:gravity="bottom"
-                        android:textSize="@dimen/text_size_city" />
+                        android:text="@{compareLocale.displayCity}"
+                        android:textSize="@dimen/text_size_city"
+                        tools:text="Tokyo/Japan" />
                 </LinearLayout>
 
                 <TextView
-                    android:layout_marginTop="@dimen/adjust_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    tools:text="2017-03-01"
-                    android:text="@{compareLocale.displayDate}"
+                    android:layout_marginTop="@dimen/adjust_margin"
                     android:gravity="top"
-                    android:textSize="@dimen/text_size_date"/>
+                    android:text="@{compareLocale.displayDate}"
+                    android:textColor="@color/colorRouge"
+                    android:textSize="@dimen/text_size_date"
+                    tools:text="2017-03-01" />
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/deleteBtn"
                 android:layout_width="90dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/holo_red_dark"
-                android:id="@+id/deleteBtn"
+                android:background="@color/colorRouge"
                 android:clickable="true"
                 android:focusable="true">
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="center"
                     android:src="@drawable/ic_delete_black_24dp"
-                    android:tint="@android:color/background_light"
-                    />
+                    android:tint="@android:color/background_light" />
             </RelativeLayout>
 
         </LinearLayout>
