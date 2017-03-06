@@ -171,7 +171,8 @@ public class RecordListFragment extends Fragment {
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
 
-                Drawable background = new ColorDrawable(Color.RED);
+                int rouge = ContextCompat.getColor(getContext(), R.color.colorRouge);
+                Drawable background = new ColorDrawable(rouge);
                 Drawable binIcon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_black_24dp);
                 binIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 int iconMargin = (int) getActivity().getResources().getDimension(R.dimen.text_margin);

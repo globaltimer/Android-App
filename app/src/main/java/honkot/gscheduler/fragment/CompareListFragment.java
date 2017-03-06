@@ -20,12 +20,12 @@ import org.threeten.bp.ZonedDateTime;
 
 import javax.inject.Inject;
 
-import honkot.gscheduler.utils.MyRecAdapter;
 import honkot.gscheduler.R;
 import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentCompareListBinding;
 import honkot.gscheduler.model.CompareLocale;
+import honkot.gscheduler.utils.MyRecAdapter;
 
 /**
  * Created by hiroki on 2017-02-25.
@@ -118,7 +118,7 @@ public class CompareListFragment extends Fragment {
             // Calculate current offset time
             ZonedDateTime basisDateTime = basisLocale.getZonedDateTime().plusMinutes(offsetMinutes);
 
-            new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            new DatePickerDialog(getContext(), R.style.DatePickerTheme, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, final int year, final int monthOfYear, final int dayOfMonth) {
                     ZonedDateTime selectDate = basisLocale.getZonedDateTime()
@@ -139,7 +139,7 @@ public class CompareListFragment extends Fragment {
             // Calculate current offset time
             ZonedDateTime basisDateTime = basisLocale.getZonedDateTime().plusMinutes(offsetMinutes);
 
-            new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            new TimePickerDialog(getContext(), R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, final int hour, final int minute) {
                     ZonedDateTime selectTime = basisLocale.getZonedDateTime()
@@ -179,9 +179,10 @@ public class CompareListFragment extends Fragment {
                 }
                 sb.append(" ");
             }
-            sb.append(hour).append(":").append(String.format("%02d", minutes)).append(" hours in the ");
-            sb.append(offsetMinutes > 0 ? "future" : "past");
 
+            sb.append(hour).append(":").append(String.format("%02d", minutes));
+            sb.append(" hours in the ");
+            sb.append(offsetMinutes > 0 ? "future" : "past");
             binding.futureMsgTextView.setText(sb.toString());
         }
 

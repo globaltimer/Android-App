@@ -8,6 +8,6 @@
     <dimen name="height_basisLocale">200dp</dimen>
     <dimen name="text_size_time">34sp</dimen>
     <dimen name="text_size_date">14sp</dimen>
-    <dimen name="text_size_city">26sp</dimen>
+    <dimen name="text_size_city">22sp</dimen>
     <dimen name="adjust_margin">2dp</dimen>
 </resources>
