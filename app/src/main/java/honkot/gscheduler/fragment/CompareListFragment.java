@@ -179,7 +179,7 @@ public class CompareListFragment extends Fragment {
                 }
                 sb.append(" ");
             }
-            
+
             sb.append(hour).append(":").append(String.format("%02d", minutes));
             sb.append(" hours in the ");
             sb.append(offsetMinutes > 0 ? "future" : "past");

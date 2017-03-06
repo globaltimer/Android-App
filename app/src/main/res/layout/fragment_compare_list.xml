@@ -82,7 +82,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/colorEmerald"
                     android:textSize="18sp"
-                    tools:text="2017/03/01" />
+                    tools:text="@{compareLocale.getDisplayDate()}" />
 
             </RelativeLayout>
 
