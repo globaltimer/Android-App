@@ -52,6 +52,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     public void switchBasis(CompareLocale_Selector newSelector, CompareLocale newBasis) {
         for (MyViewHolder holder : mViewHolders) {
             holder.compareLocale.setBasis(holder.compareLocale.equals(newBasis));
+            Debug.Log("p:" + holder.position + ", f:" + holder.compareLocale.isBasis());
             holder.binding.setCompareLocale(holder.compareLocale);
         }
         // mDataCashはそのまま使いたいので、selectorだけ変更するようにする
@@ -147,9 +148,8 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         CompareLocale compareLocale = mDataCash.get(position);
         if (compareLocale == null) {
             compareLocale = selector.get(position);
-            mDataCash.put(position, selector.get(position));
+            mDataCash.put(position, compareLocale);
         }
-//        Debug.Log(compareLocale.toString());
         compareLocale.setZonedDateTime(
                 startTime.withZoneSameInstant(compareLocale.getZonedDateTime().getZone()));
         return compareLocale;
