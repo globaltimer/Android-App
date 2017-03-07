@@ -134,6 +134,14 @@ public class CompareLocale implements ListBindingInterface {
         this.zonedDateTime = zonedDateTime;
     }
 
+    public void setZonedDateTimeNow() {
+        setZonedDateTime(
+                ZonedDateTime.now(ZoneId.systemDefault())
+                        .withSecond(0)
+                        .withNano(0)
+                        .withZoneSameInstant(getZonedDateTime().getZone()));
+    }
+
     @Override
     public String getDisplayCity() { return getLocationName();}
 

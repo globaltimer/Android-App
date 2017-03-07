@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+
 import java.util.ArrayList;
 
 import honkot.gscheduler.R;
@@ -21,20 +24,23 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     private OnItemClickListener deleteButtonListener;
     private CompareListFragment.OffsetMinsGetter offsetMinsGetter;
     private int mSelectorCount;
+    private ZonedDateTime startTime;
     private ArrayList<MyViewHolder> mViewHolders = new ArrayList<>();
     private SparseArray<CompareLocale> mDataCash = new SparseArray<>();
 
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener,
-                        OnItemClickListener deleteButtonListener) {
+                        OnItemClickListener deleteButtonListener, CompareListFragment.OffsetMinsGetter offsetMinsGetter) {
         this.listener = listener;
         this.deleteButtonListener = deleteButtonListener;
+        this.offsetMinsGetter = offsetMinsGetter;
         setSelector(selector, true);
+        startTime = ZonedDateTime.now(ZoneId.systemDefault()).withSecond(0).withNano(0);
     }
 
     public MyRecAdapter(CompareLocale_Selector selector, OnItemClickListener listener
             , CompareListFragment.OffsetMinsGetter offsetMinsGetter) {
-        this(selector, listener, listener); // TODO
+        this(selector, listener, null, offsetMinsGetter);
         this.offsetMinsGetter = offsetMinsGetter;
     }
 
@@ -135,10 +141,15 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     }
 
     public CompareLocale getItemForPosition(int position) {
-        if (mDataCash.get(position) == null) {
+        CompareLocale compareLocale = mDataCash.get(position);
+        if (compareLocale == null) {
+            compareLocale = selector.get(position);
             mDataCash.put(position, selector.get(position));
         }
-        return mDataCash.get(position);
+        Debug.Log(compareLocale.toString());
+        compareLocale.setZonedDateTime(
+                startTime.withZoneSameInstant(compareLocale.getZonedDateTime().getZone()));
+        return compareLocale;
     }
 
     public interface OnItemClickListener {

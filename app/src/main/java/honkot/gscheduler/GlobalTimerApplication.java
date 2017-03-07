@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import honkot.gscheduler.di.AppComponent;
 import honkot.gscheduler.di.AppModule;
 import honkot.gscheduler.di.DaggerAppComponent;
@@ -24,6 +26,9 @@ public class GlobalTimerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // initialize to use ZonedDateTime
+        AndroidThreeTen.init(this);
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))

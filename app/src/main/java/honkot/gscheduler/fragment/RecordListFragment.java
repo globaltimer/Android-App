@@ -7,6 +7,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +24,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
 
 import javax.inject.Inject;
 
@@ -44,6 +50,10 @@ public class RecordListFragment extends Fragment {
     private MenuItem editMenu;
     private MenuItem doneMenu;
 
+    private int offsetMins = 0;
+    private ZonedDateTime startTime = ZonedDateTime.now(ZoneId.systemDefault()).withSecond(0).withNano(0);
+    private Handler timeCountHandler;
+
     public interface OnItemClickListener {
         void onItemClick(CompareLocale compareLocale);
     }
@@ -59,6 +69,7 @@ public class RecordListFragment extends Fragment {
         binding = FragmentRecordListBinding.inflate(
                 getActivity().getLayoutInflater(), null, false);
         initView();
+        initHandler();
         return binding.getRoot();
     }
 
@@ -70,6 +81,30 @@ public class RecordListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateTime();
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+        long nowSec = now.toEpochSecond();
+
+        timeCountHandler.sendEmptyMessageDelayed(0,
+                (now.withSecond(0).withNano(0).plusMinutes(1).toEpochSecond() - nowSec ) * 1000);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        timeCountHandler.removeMessages(0);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timeCountHandler = null;
     }
 
     private void initView() {
@@ -90,6 +125,7 @@ public class RecordListFragment extends Fragment {
                     myAdapter.switchBasis(compareLocaleDao.findAll(), compareLocale);
                 }
             }
+
         }, new MyRecAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(CompareLocale compareLocale, int position) {
@@ -98,6 +134,12 @@ public class RecordListFragment extends Fragment {
                 compareLocaleDao.remove(removeLocale);
                 myAdapter.remove(compareLocaleDao.findAll(), position);
             }
+        }, new CompareListFragment.OffsetMinsGetter() {
+            @Override
+            public int getOffsetMins() {
+                return offsetMins;
+            }
+
         });
         binding.recyclerView.setAdapter(myAdapter);
         binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -199,5 +241,33 @@ public class RecordListFragment extends Fragment {
 
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(touchHelper);
         mItemTouchHelper.attachToRecyclerView(binding.recyclerView);
+    }
+
+    private void initHandler() {
+        HandlerThread handlerThread = new HandlerThread("time_counter");
+        handlerThread.start();
+        timeCountHandler = new Handler(handlerThread.getLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+
+                if (msg.what == 0) {
+                    updateTime();
+                    timeCountHandler.sendEmptyMessageDelayed(0, 60 * 1000);
+                }
+            }
+        };
+    }
+
+    private void updateTime() {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+        offsetMins = (int)((now.toEpochSecond() - startTime.toEpochSecond()) / 60);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MyRecAdapter myAdapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+                myAdapter.notifyDataSetChanged();
+            }
+        });
     }
 }

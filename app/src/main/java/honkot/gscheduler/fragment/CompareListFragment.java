@@ -55,7 +55,9 @@ public class CompareListFragment extends Fragment {
 
     public void initialize() {
         basisLocale = compareLocaleDao.getBasisLocale();
+
         if (basisLocale != null) {
+            basisLocale.setZonedDateTimeNow();
             offsetMinutes = 0;
             initView();
         }
