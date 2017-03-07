@@ -50,6 +50,7 @@ public class RecordListFragment extends Fragment {
     private MenuItem addMenu;
     private MenuItem editMenu;
     private MenuItem doneMenu;
+    private long lastBasisId = 0;
 
     private int offsetMins = 0;
     private ZonedDateTime startTime = ZonedDateTime.now(ZoneId.systemDefault()).withSecond(0).withNano(0);
@@ -71,6 +72,12 @@ public class RecordListFragment extends Fragment {
                 getActivity().getLayoutInflater(), null, false);
         initView();
         initHandler();
+
+        CompareLocale compareLocale = compareLocaleDao.getBasisLocale();
+        if (compareLocale != null) {
+            lastBasisId = compareLocale.getId();
+        }
+
         return binding.getRoot();
     }
 
@@ -111,6 +118,10 @@ public class RecordListFragment extends Fragment {
     private void initView() {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
+
+            /**
+             * When the row is clicked
+             */
             @Override
             public void onItemClicked(CompareLocale compareLocale, int position) {
                 if (compareLocale.isBasis() && !editMode) {
@@ -128,15 +139,22 @@ public class RecordListFragment extends Fragment {
             }
 
         }, new MyRecAdapter.OnItemClickListener() {
+
+            /**
+             * When the delete button in row is clicked
+             */
             @Override
             public void onItemClicked(CompareLocale compareLocale, int position) {
                 MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                 CompareLocale removeLocale = myAdapter.getItemForPosition(position);
-                Debug.Log("p:" + position + ", id:" + removeLocale.getId() + ", c:" + removeLocale.getDisplayCity());
                 compareLocaleDao.remove(removeLocale);
                 myAdapter.remove(compareLocaleDao.findAll(), position);
             }
         }, new CompareListFragment.OffsetMinsGetter() {
+
+            /**
+             * just callback the time offset
+             */
             @Override
             public int getOffsetMins() {
                 return offsetMins;
@@ -285,5 +303,22 @@ public class RecordListFragment extends Fragment {
                 myAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    public void updateViewIfNeeded() {
+        if (compareLocaleDao != null) {
+            CompareLocale compareLocale = compareLocaleDao.getBasisLocale();
+            long tmpBasisId = 0;
+            if (compareLocale != null) {
+                tmpBasisId = compareLocale.getId();
+            }
+
+            if (tmpBasisId != lastBasisId) {
+                lastBasisId = tmpBasisId;
+                MyRecAdapter myRecAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
+                myRecAdapter.setDataAndUpdateList(compareLocaleDao.findAll());
+            }
+
+        }
     }
 }

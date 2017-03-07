@@ -25,6 +25,7 @@ import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentCompareListBinding;
 import honkot.gscheduler.model.CompareLocale;
+import honkot.gscheduler.model.CompareLocale_Selector;
 import honkot.gscheduler.utils.MyRecAdapter;
 
 /**
@@ -37,6 +38,8 @@ public class CompareListFragment extends Fragment {
     private FragmentCompareListBinding binding;
     private int offsetMinutes;
     private CompareLocale basisLocale;
+    private ZonedDateTime startZonedDateTime;
+    private long lastBasisId = 0;
 
     @Inject
     CompareLocaleDao compareLocaleDao;
@@ -57,9 +60,23 @@ public class CompareListFragment extends Fragment {
         basisLocale = compareLocaleDao.getBasisLocale();
 
         if (basisLocale != null) {
-            basisLocale.setZonedDateTimeNow();
-            offsetMinutes = 0;
-            initView();
+            if (lastBasisId != basisLocale.getId()) {
+                // 初回 or basisが変わったら全て描画し直す
+                lastBasisId = basisLocale.getId();
+                basisLocale.setZonedDateTimeNow();
+                startZonedDateTime = basisLocale.getZonedDateTime();
+                offsetMinutes = 0;
+                initView();
+
+            } else {
+                MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
+                CompareLocale_Selector newSelector = compareLocaleDao.findAllExceptBasis();
+                if (myAdapter.getItemCount() != newSelector.count()) {
+                    // CompareLocaleが追加/削除されていたらリスト更新
+                    myAdapter.setDataAndUpdateList(compareLocaleDao.findAllExceptBasis());
+                }
+            }
+
         }
     }
 
@@ -77,13 +94,33 @@ public class CompareListFragment extends Fragment {
     private void initView() {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAllExceptBasis(), new MyRecAdapter.OnItemClickListener() {
+
+            /**
+             * When the row is clicked
+             */
             @Override
             public void onItemClicked(CompareLocale compareLocale, int position) {
-//                Intent intent = new Intent(getActivity(), MainActivity.class);
-//                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
-//                startActivity(intent);
+                // update basis and recyclerView
+                compareLocaleDao.changeBasis(compareLocale);
+                MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
+                myAdapter.switchBasisWithClearCash(
+                        compareLocaleDao.findAllExceptBasis(), compareLocale);
+                myAdapter.notifyDataSetChanged();
+
+                // update basis view
+                basisLocale = compareLocaleDao.getBasisLocale();
+                basisLocale.setZonedDateTime(
+                        startZonedDateTime.withZoneSameInstant(
+                                basisLocale.getZonedDateTime().getZone()));
+                basisLocale.setOffsetMins(offsetMinutes);
+                lastBasisId = basisLocale.getId();
+                updateTime();
             }
         }, new OffsetMinsGetter() {
+
+            /**
+             * just callback the time offset
+             */
             @Override
             public int getOffsetMins() {
                 return offsetMinutes;

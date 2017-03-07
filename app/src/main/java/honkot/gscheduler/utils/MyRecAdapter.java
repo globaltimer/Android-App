@@ -50,13 +50,20 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
     }
 
     public void switchBasis(CompareLocale_Selector newSelector, CompareLocale newBasis) {
+        innerSwitchBasis(newSelector, newBasis, false);
+    }
+
+    public void switchBasisWithClearCash(CompareLocale_Selector newSelector, CompareLocale newBasis) {
+        innerSwitchBasis(newSelector, newBasis, true);
+    }
+
+    private void innerSwitchBasis(CompareLocale_Selector newSelector, CompareLocale newBasis, boolean cashClear) {
         for (MyViewHolder holder : mViewHolders) {
             holder.compareLocale.setBasis(holder.compareLocale.equals(newBasis));
-            Debug.Log("p:" + holder.position + ", f:" + holder.compareLocale.isBasis());
             holder.binding.setCompareLocale(holder.compareLocale);
         }
         // mDataCashはそのまま使いたいので、selectorだけ変更するようにする
-        setSelector(newSelector, false);
+        setSelector(newSelector, cashClear);
     }
 
     private void setSelector(CompareLocale_Selector selector, boolean needCashClean) {
