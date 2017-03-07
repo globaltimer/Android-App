@@ -165,6 +165,8 @@ public class RecordListFragment extends Fragment {
         addMenu = menu.findItem(R.id.action_add);
         editMenu = menu.findItem(R.id.action_edit);
         doneMenu = menu.findItem(R.id.action_done);
+
+        updateMenu();
     }
 
     @Override
@@ -182,15 +184,19 @@ public class RecordListFragment extends Fragment {
                 MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
                 adapter.changeRow(editMode);
 
-                addMenu.setVisible(!editMode);
-                editMenu.setVisible(!editMode);
-                doneMenu.setVisible(editMode);
+                updateMenu();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void updateMenu() {
+        addMenu.setVisible(!editMode);
+        editMenu.setVisible(!editMode);
+        doneMenu.setVisible(editMode);
     }
 
     private void setUpItemTouchHelper() {
