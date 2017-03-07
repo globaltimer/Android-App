@@ -184,6 +184,7 @@ public class RecordListFragment extends Fragment {
                 MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
                 adapter.changeRow(editMode);
 
+                attachItemTouchHelper();
                 updateMenu();
                 return true;
             default:
@@ -248,9 +249,14 @@ public class RecordListFragment extends Fragment {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         };
+        mItemTouchHelper = new ItemTouchHelper(touchHelper);
+        attachItemTouchHelper();
+    }
 
-        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(touchHelper);
-        mItemTouchHelper.attachToRecyclerView(binding.recyclerView);
+    ItemTouchHelper mItemTouchHelper;
+
+    private void attachItemTouchHelper() {
+        mItemTouchHelper.attachToRecyclerView(editMode ? null : binding.recyclerView);
     }
 
     private void initHandler() {
