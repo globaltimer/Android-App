@@ -82,7 +82,6 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
         private CompareLocale compareLocale;
         private int position;
 
-
         private MyViewHolder(final ListRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
@@ -98,14 +97,18 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
                 case R.id.editRow:
                 case R.id.rowClickView:
                     if (listener != null) {
-                        listener.onItemClicked(
-                                getItemForPosition(getLayoutPosition()), position);
+                        if (position < mSelectorCount) {
+                            listener.onItemClicked(
+                                    getItemForPosition(getLayoutPosition()), position);
+                        }
                     }
                     break;
                 case R.id.deleteBtn:
                     if (deleteButtonListener != null) {
-                        deleteButtonListener.onItemClicked(
-                                getItemForPosition(getLayoutPosition()), position);
+                        if (position < mSelectorCount) {
+                            deleteButtonListener.onItemClicked(
+                                    getItemForPosition(getLayoutPosition()), position);
+                        }
                     }
                     break;
 
@@ -146,7 +149,7 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
             compareLocale = selector.get(position);
             mDataCash.put(position, selector.get(position));
         }
-        Debug.Log(compareLocale.toString());
+//        Debug.Log(compareLocale.toString());
         compareLocale.setZonedDateTime(
                 startTime.withZoneSameInstant(compareLocale.getZonedDateTime().getZone()));
         return compareLocale;
@@ -166,8 +169,20 @@ public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.MyViewHolder
      * @param position
      */
     public void remove(CompareLocale_Selector newSelector, int position) {
+        // ViewHolderがもつpositionをズラす
+        for (MyViewHolder holder : mViewHolders) {
+            if (holder.position > position) {
+                holder.position--;
+            }
+        }
+
+        // 削除animation
         notifyItemRemoved(position);
+
+        // selector更新
         setSelector(newSelector, false);
+
+        // Cash更新
         SparseArray<CompareLocale> newCash = new SparseArray<>();
         for (int i = 0; i < mDataCash.size(); i++) {
             CompareLocale tmpLocale = mDataCash.get(i);
