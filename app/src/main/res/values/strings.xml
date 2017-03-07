@@ -8,8 +8,8 @@
   <string name="leftArrow">＜</string>
   <string name="rightArrow">＞</string>
   <string-array name="tab_titles">
-      <item>Time Now</item>
       <item>Set Time</item>
+      <item>Time Now</item>
   </string-array>
   <string name="title_bar">DONE</string>
 </resources>
