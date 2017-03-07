@@ -55,9 +55,9 @@ public class CompareListFragment extends Fragment {
 
     public void initialize() {
         basisLocale = compareLocaleDao.getBasisLocale();
-        basisLocale.setZonedDateTimeNow();
 
         if (basisLocale != null) {
+            basisLocale.setZonedDateTimeNow();
             offsetMinutes = 0;
             initView();
         }
@@ -78,7 +78,7 @@ public class CompareListFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAllExceptBasis(), new MyRecAdapter.OnItemClickListener() {
             @Override
-            public void onItemClicked(CompareLocale compareLocale) {
+            public void onItemClicked(CompareLocale compareLocale, int position) {
 //                Intent intent = new Intent(getActivity(), MainActivity.class);
 //                intent.putExtra(MainActivity.EXTRA_ID, compareLocale.getId());
 //                startActivity(intent);
@@ -120,7 +120,7 @@ public class CompareListFragment extends Fragment {
             // Calculate current offset time
             ZonedDateTime basisDateTime = basisLocale.getZonedDateTime().plusMinutes(offsetMinutes);
 
-            new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+            new DatePickerDialog(getContext(), R.style.DatePickerTheme, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, final int year, final int monthOfYear, final int dayOfMonth) {
                     ZonedDateTime selectDate = basisLocale.getZonedDateTime()
@@ -141,7 +141,7 @@ public class CompareListFragment extends Fragment {
             // Calculate current offset time
             ZonedDateTime basisDateTime = basisLocale.getZonedDateTime().plusMinutes(offsetMinutes);
 
-            new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            new TimePickerDialog(getContext(), R.style.TimePickerTheme, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, final int hour, final int minute) {
                     ZonedDateTime selectTime = basisLocale.getZonedDateTime()
@@ -181,9 +181,10 @@ public class CompareListFragment extends Fragment {
                 }
                 sb.append(" ");
             }
-            sb.append(hour).append(":").append(String.format("%02d", minutes)).append(" hours in the ");
-            sb.append(offsetMinutes > 0 ? "future" : "past");
 
+            sb.append(hour).append(":").append(String.format("%02d", minutes));
+            sb.append(" hours in the ");
+            sb.append(offsetMinutes > 0 ? "future" : "past");
             binding.futureMsgTextView.setText(sb.toString());
         }
 

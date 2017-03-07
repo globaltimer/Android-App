@@ -44,12 +44,16 @@ public class RecordListFragment extends Fragment {
     private static final int REQUEST_CODE = 1;
     public static final int RESULT_SUCCESS = 1;
     private FragmentRecordListBinding binding;
+    private OnItemClickListener tabListener;
+    private boolean editMode = false;
+    private MenuItem addMenu;
+    private MenuItem editMenu;
+    private MenuItem doneMenu;
 
     private int offsetMins = 0;
     private ZonedDateTime startTime = ZonedDateTime.now(ZoneId.systemDefault()).withSecond(0).withNano(0);
     private Handler timeCountHandler;
 
-    private OnItemClickListener listener;
     public interface OnItemClickListener {
         void onItemClick(CompareLocale compareLocale);
     }
@@ -70,7 +74,7 @@ public class RecordListFragment extends Fragment {
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+        this.tabListener = listener;
     }
 
     @Override
@@ -107,10 +111,10 @@ public class RecordListFragment extends Fragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyRecAdapter myAdapter = new MyRecAdapter(compareLocaleDao.findAll(), new MyRecAdapter.OnItemClickListener() {
             @Override
-            public void onItemClicked(CompareLocale compareLocale) {
-                if (compareLocale.isBasis()) {
-                    if (listener != null) {
-                        listener.onItemClick(compareLocale);
+            public void onItemClicked(CompareLocale compareLocale, int position) {
+                if (compareLocale.isBasis() && !editMode) {
+                    if (tabListener != null) {
+                        tabListener.onItemClick(compareLocale);
 
                     } else {
                         Log.e(TAG, "onItemClick can not catch event " + compareLocale.toString());
@@ -121,11 +125,21 @@ public class RecordListFragment extends Fragment {
                     myAdapter.switchBasis(compareLocaleDao.findAll(), compareLocale);
                 }
             }
+
+        }, new MyRecAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClicked(CompareLocale compareLocale, int position) {
+                MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
+                CompareLocale removeLocale = myAdapter.getItemForPosition(position);
+                compareLocaleDao.remove(removeLocale);
+                myAdapter.remove(compareLocaleDao.findAll(), position);
+            }
         }, new CompareListFragment.OffsetMinsGetter() {
             @Override
             public int getOffsetMins() {
                 return offsetMins;
             }
+
         });
         binding.recyclerView.setAdapter(myAdapter);
         binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -146,6 +160,9 @@ public class RecordListFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        addMenu = menu.findItem(R.id.action_add);
+        editMenu = menu.findItem(R.id.action_edit);
+        doneMenu = menu.findItem(R.id.action_done);
     }
 
     @Override
@@ -158,15 +175,19 @@ public class RecordListFragment extends Fragment {
                 return true;
 
             case R.id.action_edit:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                return true;
+            case R.id.action_done:
+                editMode = !editMode;
+                MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
+                adapter.changeRow(editMode);
 
+                addMenu.setVisible(!editMode);
+                editMenu.setVisible(!editMode);
+                doneMenu.setVisible(editMode);
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
@@ -185,7 +206,6 @@ public class RecordListFragment extends Fragment {
                 MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                 CompareLocale removeLocale = myAdapter.getItemForPosition(swipedPosition);
                 compareLocaleDao.remove(removeLocale);
-
                 myAdapter.remove(compareLocaleDao.findAll(), swipedPosition);
             }
 
@@ -193,7 +213,8 @@ public class RecordListFragment extends Fragment {
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 View itemView = viewHolder.itemView;
 
-                Drawable background = new ColorDrawable(Color.RED);
+                int rouge = ContextCompat.getColor(getContext(), R.color.colorRouge);
+                Drawable background = new ColorDrawable(rouge);
                 Drawable binIcon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_delete_black_24dp);
                 binIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 int iconMargin = (int) getActivity().getResources().getDimension(R.dimen.text_margin);

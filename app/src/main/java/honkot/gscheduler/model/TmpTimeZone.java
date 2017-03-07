@@ -1,8 +1,8 @@
 package honkot.gscheduler.model;
 
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
-import com.android.annotations.NonNull;
 import com.github.gfx.android.orma.annotation.Column;
 import com.github.gfx.android.orma.annotation.Getter;
 import com.github.gfx.android.orma.annotation.PrimaryKey;
