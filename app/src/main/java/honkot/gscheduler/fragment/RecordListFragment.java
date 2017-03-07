@@ -36,6 +36,7 @@ import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentRecordListBinding;
 import honkot.gscheduler.model.CompareLocale;
+import honkot.gscheduler.utils.Debug;
 import honkot.gscheduler.utils.MyRecAdapter;
 
 public class RecordListFragment extends Fragment {
@@ -131,6 +132,7 @@ public class RecordListFragment extends Fragment {
             public void onItemClicked(CompareLocale compareLocale, int position) {
                 MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                 CompareLocale removeLocale = myAdapter.getItemForPosition(position);
+                Debug.Log("p:" + position + ", id:" + removeLocale.getId() + ", c:" + removeLocale.getDisplayCity());
                 compareLocaleDao.remove(removeLocale);
                 myAdapter.remove(compareLocaleDao.findAll(), position);
             }
@@ -205,6 +207,8 @@ public class RecordListFragment extends Fragment {
                 int swipedPosition = viewHolder.getAdapterPosition();
                 MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                 CompareLocale removeLocale = myAdapter.getItemForPosition(swipedPosition);
+                Debug.Log("p:" + swipedPosition + ", id:" + removeLocale.getId() + ", c:" + removeLocale.getDisplayCity());
+
                 compareLocaleDao.remove(removeLocale);
                 myAdapter.remove(compareLocaleDao.findAll(), swipedPosition);
             }
