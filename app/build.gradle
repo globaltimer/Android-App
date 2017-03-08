@@ -4,11 +4,11 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "honkot.gscheduler"
+        applicationId "jp.lovesalmon.globalclock"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 901
+        versionName "0.09.01"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,15 +28,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:support-v4:25.1.1'
-    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:support-v4:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.github.gfx.android.orma:orma:4.1.1'
     compile 'com.google.dagger:dagger:2.8'
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.3'
-    compile 'com.android.support:recyclerview-v7:25.1.1'
+    compile 'com.android.support:recyclerview-v7:25.2.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.gfx.android.orma:orma-processor:4.1.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
-    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-    compile 'com.android.support:design:25.1.1'
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
+    compile 'com.android.support:design:25.2.0'
 }

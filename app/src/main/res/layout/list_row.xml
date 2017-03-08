@@ -8,7 +8,7 @@
         <import type="android.view.View"/>
         <variable
             name="compareLocale"
-            type="honkot.gscheduler.model.ListBindingInterface" />
+            type="jp.lovesalmon.globalclock.model.ListBindingInterface" />
     </data>
 
     <LinearLayout
