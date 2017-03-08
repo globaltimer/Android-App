@@ -34,11 +34,6 @@ public class TabActivity extends BaseActivity implements
         recordListFragment.setOnItemClickListener(new RecordListFragment.OnItemClickListener() {
             @Override
             public void onItemClick(CompareLocale compareLocale) {
-                FragmentPagerAdapter adapter =
-                        (FragmentPagerAdapter) binding.pager.getAdapter();
-                CompareListFragment fragment =
-                        (CompareListFragment) adapter.getItem(PAGE_COMPARE);
-                fragment.initialize();
                 binding.pager.setCurrentItem(PAGE_COMPARE);
             }
         });
@@ -85,6 +80,20 @@ public class TabActivity extends BaseActivity implements
 
     @Override
     public void onPageSelected(int position) {
+        FragmentPagerAdapter adapter =
+                (FragmentPagerAdapter) binding.pager.getAdapter();
+
+        if (position == PAGE_COMPARE) {
+            // initialize compare page
+            CompareListFragment fragment =
+                    (CompareListFragment) adapter.getItem(PAGE_COMPARE);
+            fragment.initialize();
+
+        } else if (position == PAGE_RECORD_LIST) {
+            RecordListFragment fragment =
+                    (RecordListFragment) adapter.getItem(PAGE_RECORD_LIST);
+            fragment.updateViewIfNeeded();
+        }
     }
 
     @Override
