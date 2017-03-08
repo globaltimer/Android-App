@@ -13,7 +13,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include
+            android:id="@+id/emptyView"
+            layout="@layout/view_empty_locale"
+            android:visibility="gone" />
+
         <LinearLayout
+            android:id="@+id/mainView"
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:layout_alignParentLeft="true"

@@ -42,7 +42,7 @@ import honkot.gscheduler.utils.MyRecAdapter;
 public class RecordListFragment extends Fragment {
 
     private static final String TAG = "RecordListFragment";
-    private static final int REQUEST_CODE = 1;
+    protected static final int REQUEST_CODE = 1;
     public static final int RESULT_SUCCESS = 1;
     private FragmentRecordListBinding binding;
     private OnItemClickListener tabListener;
@@ -51,6 +51,7 @@ public class RecordListFragment extends Fragment {
     private MenuItem editMenu;
     private MenuItem doneMenu;
     private long lastBasisId = 0;
+    private long lastRecordCount = 0;
 
     private int offsetMins = 0;
     private ZonedDateTime startTime = ZonedDateTime.now(ZoneId.systemDefault()).withSecond(0).withNano(0);
@@ -76,6 +77,7 @@ public class RecordListFragment extends Fragment {
         CompareLocale compareLocale = compareLocaleDao.getBasisLocale();
         if (compareLocale != null) {
             lastBasisId = compareLocale.getId();
+            lastRecordCount = compareLocaleDao.findAll().count();
         }
 
         return binding.getRoot();
@@ -149,6 +151,8 @@ public class RecordListFragment extends Fragment {
                 CompareLocale removeLocale = myAdapter.getItemForPosition(position);
                 compareLocaleDao.remove(removeLocale);
                 myAdapter.remove(compareLocaleDao.findAll(), position);
+
+                showEmptyIfNeeded();
             }
         }, new CompareListFragment.OffsetMinsGetter() {
 
@@ -165,6 +169,7 @@ public class RecordListFragment extends Fragment {
         binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         setUpItemTouchHelper();
+        showEmptyIfNeeded();
     }
 
     @Override
@@ -172,6 +177,7 @@ public class RecordListFragment extends Fragment {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_SUCCESS) {
             MyRecAdapter adapter = (MyRecAdapter)binding.recyclerView.getAdapter();
             adapter.setDataAndUpdateList(compareLocaleDao.findAll());
+            showEmptyIfNeeded();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -191,7 +197,6 @@ public class RecordListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add:
-                Log.i(TAG, "onOptionsItemSelected: ");
                 Intent intent = new Intent(getActivity(), AddCompareLocaleActivity.class);
                 startActivityForResult(intent, REQUEST_CODE);
                 return true;
@@ -213,9 +218,18 @@ public class RecordListFragment extends Fragment {
     }
 
     private void updateMenu() {
-        addMenu.setVisible(!editMode);
-        editMenu.setVisible(!editMode);
-        doneMenu.setVisible(editMode);
+        boolean emptyRecord = compareLocaleDao.findAll().isEmpty();
+
+        if (!emptyRecord) {
+            addMenu.setVisible(!editMode);
+            editMenu.setVisible(!editMode);
+            doneMenu.setVisible(editMode);
+
+        } else {
+            addMenu.setVisible(true);
+            editMenu.setVisible(false);
+            doneMenu.setVisible(false);
+        }
     }
 
     private void setUpItemTouchHelper() {
@@ -236,6 +250,8 @@ public class RecordListFragment extends Fragment {
 
                 compareLocaleDao.remove(removeLocale);
                 myAdapter.remove(compareLocaleDao.findAll(), swipedPosition);
+
+                showEmptyIfNeeded();
             }
 
             @Override
@@ -313,12 +329,37 @@ public class RecordListFragment extends Fragment {
                 tmpBasisId = compareLocale.getId();
             }
 
-            if (tmpBasisId != lastBasisId) {
+            int recordCount = compareLocaleDao.findAll().count();
+            if (tmpBasisId != lastBasisId
+                    || lastRecordCount != recordCount) {
                 lastBasisId = tmpBasisId;
+                showEmptyIfNeeded();
                 MyRecAdapter myRecAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
                 myRecAdapter.setDataAndUpdateList(compareLocaleDao.findAll());
             }
 
+        }
+    }
+
+    private void showEmptyIfNeeded() {
+        lastRecordCount = compareLocaleDao.findAll().count();
+        boolean emptyRecord = lastRecordCount == 0;
+
+        binding.emptyView.emptyViewRoot.setVisibility(emptyRecord ? View.VISIBLE : View.GONE);
+        binding.recyclerView.setVisibility(emptyRecord ? View.GONE : View.VISIBLE);
+        if (emptyRecord) {
+            binding.emptyView.addFirstLocaleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), AddCompareLocaleActivity.class);
+                    startActivityForResult(intent, RESULT_SUCCESS);
+                }
+            });
+
+            editMode = false;
+            if (editMenu != null) {
+                updateMenu();
+            }
         }
     }
 }

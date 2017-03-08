@@ -3,6 +3,7 @@ package honkot.gscheduler.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,18 +16,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.threeten.bp.ZonedDateTime;
 
 import javax.inject.Inject;
 
 import honkot.gscheduler.R;
+import honkot.gscheduler.activity.AddCompareLocaleActivity;
 import honkot.gscheduler.activity.BaseActivity;
 import honkot.gscheduler.dao.CompareLocaleDao;
 import honkot.gscheduler.databinding.FragmentCompareListBinding;
 import honkot.gscheduler.model.CompareLocale;
 import honkot.gscheduler.model.CompareLocale_Selector;
 import honkot.gscheduler.utils.MyRecAdapter;
+
+import static honkot.gscheduler.fragment.RecordListFragment.REQUEST_CODE;
+import static honkot.gscheduler.fragment.RecordListFragment.RESULT_SUCCESS;
 
 /**
  * Created by hiroki on 2017-02-25.
@@ -58,8 +64,15 @@ public class CompareListFragment extends Fragment {
 
     public void initialize() {
         basisLocale = compareLocaleDao.getBasisLocale();
+        CompareLocale_Selector expectBasisSelector = compareLocaleDao.findAllExceptBasis();
 
-        if (basisLocale != null) {
+        boolean basisAvailable = basisLocale != null;
+        boolean emptyRecord = !basisAvailable && expectBasisSelector.isEmpty();
+
+        binding.emptyView.emptyViewRoot.setVisibility(emptyRecord ? View.VISIBLE : View.GONE);
+        binding.mainView.setVisibility(emptyRecord ? View.GONE : View.VISIBLE);
+
+        if (basisAvailable) {
             if (lastBasisId != basisLocale.getId()) {
                 // 初回 or basisが変わったら全て描画し直す
                 lastBasisId = basisLocale.getId();
@@ -67,16 +80,34 @@ public class CompareListFragment extends Fragment {
                 startZonedDateTime = basisLocale.getZonedDateTime();
                 offsetMinutes = 0;
                 initView();
+                return;
 
             } else {
                 MyRecAdapter myAdapter = (MyRecAdapter) binding.recyclerView.getAdapter();
-                CompareLocale_Selector newSelector = compareLocaleDao.findAllExceptBasis();
-                if (myAdapter.getItemCount() != newSelector.count()) {
+                if (myAdapter.getItemCount() != expectBasisSelector.count()) {
                     // CompareLocaleが追加/削除されていたらリスト更新
-                    myAdapter.setDataAndUpdateList(compareLocaleDao.findAllExceptBasis());
+                    myAdapter.setDataAndUpdateList(expectBasisSelector);
                 }
             }
 
+        } else {
+            if (!emptyRecord) {
+                Toast.makeText(getContext(),
+                        R.string.compare_fragment_toast_tap_locale,
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(),
+                        R.string.compare_fragment_toast_empty_record,
+                        Toast.LENGTH_SHORT).show();
+                binding.emptyView.addFirstLocaleButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getActivity(), AddCompareLocaleActivity.class);
+                        startActivityForResult(intent, RESULT_SUCCESS);
+                    }
+                });
+            }
+            initView();
         }
     }
 
@@ -88,7 +119,15 @@ public class CompareListFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menu.close();
+        menu.clear();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_SUCCESS) {
+            initialize();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initView() {
@@ -198,44 +237,47 @@ public class CompareListFragment extends Fragment {
      */
     private void updateTime() {
 
-        binding.setCompareLocale(basisLocale);
+        if (basisLocale != null) {
+            binding.setCompareLocale(basisLocale);
 
-        // Calculate current offset time
-        ZonedDateTime basisDateTime = basisLocale.getZonedDateTime().plusMinutes(offsetMinutes);
+            // Calculate current offset time
+            ZonedDateTime basisDateTime = basisLocale.getZonedDateTime().plusMinutes(offsetMinutes);
 
-        if (offsetMinutes == 0) {
-            binding.futureMsgTextView.setText(R.string.now);
-        } else {
-            int day = Math.abs(offsetMinutes / (60 * 24));
-            int hour = Math.abs((offsetMinutes - day * (60 * 24)) / 60);
-            int minutes = Math.abs((offsetMinutes - day * (60 * 24)) % 60);
+            if (offsetMinutes == 0) {
+                binding.futureMsgTextView.setText(R.string.now);
+            } else {
+                int day = Math.abs(offsetMinutes / (60 * 24));
+                int hour = Math.abs((offsetMinutes - day * (60 * 24)) / 60);
+                int minutes = Math.abs((offsetMinutes - day * (60 * 24)) % 60);
 
-            StringBuilder sb = new StringBuilder();
-            if (day != 0) {
-                sb.append(day).append(" day");
-                if (day > 1) {
-                    sb.append("s");
+                StringBuilder sb = new StringBuilder();
+                if (day != 0) {
+                    sb.append(day).append(" day");
+                    if (day > 1) {
+                        sb.append("s");
+                    }
+                    sb.append(" ");
                 }
-                sb.append(" ");
+
+                sb.append(hour).append(":").append(String.format("%02d", minutes));
+                sb.append(" hours in the ");
+                sb.append(offsetMinutes > 0 ? "future" : "past");
+                binding.futureMsgTextView.setText(sb.toString());
             }
 
-            sb.append(hour).append(":").append(String.format("%02d", minutes));
-            sb.append(" hours in the ");
-            sb.append(offsetMinutes > 0 ? "future" : "past");
-            binding.futureMsgTextView.setText(sb.toString());
+            // Basis Current Date and Time
+            binding.basisCurrentTimeTextView.setText(
+                    basisDateTime.toLocalDateTime().toString());
+
+            // 30 mins before
+            binding.basisPreviousTimeTextView.setText(
+                    basisDateTime.minusMinutes(SHIFT_MINS).toLocalTime().toString());
+
+            // 30 mins after
+            binding.basisNextTimeTextView.setText(
+                    basisDateTime.plusMinutes(SHIFT_MINS).toLocalTime().toString());
+
         }
-
-        // Basis Current Date and Time
-        binding.basisCurrentTimeTextView.setText(
-                basisDateTime.toLocalDateTime().toString());
-
-        // 30 mins before
-        binding.basisPreviousTimeTextView.setText(
-                basisDateTime.minusMinutes(SHIFT_MINS).toLocalTime().toString());
-
-        // 30 mins after
-        binding.basisNextTimeTextView.setText(
-                basisDateTime.plusMinutes(SHIFT_MINS).toLocalTime().toString());
 
         // update list
         binding.recyclerView.getAdapter().notifyDataSetChanged();
