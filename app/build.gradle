@@ -9,6 +9,8 @@ android {
         targetSdkVersion 25
         versionCode 901
         versionName "0.09.01"
+        resValue "string", "app_name", "Global Clock"
+        resValue "string", "app_version", "version 0.09.01"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

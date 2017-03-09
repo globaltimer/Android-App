@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@mipmap/ic_launcher"
-            android:title="Import"/>
-    </group>
-
-    <item android:title="Communicate">
+    <item android:title="@string/drawer_menu_category_etc">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@mipmap/ic_launcher"
-                android:title="Import"/>
+                android:id="@+id/nav_libraries"
+                android:title="@string/drawer_menu_using_libraries"/>
+            <item
+                android:id="@+id/nav_about"
+                android:title="@string/drawer_menu_about"/>
         </menu>
     </item>
 

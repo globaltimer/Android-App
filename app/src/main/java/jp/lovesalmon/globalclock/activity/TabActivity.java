@@ -2,12 +2,18 @@ package jp.lovesalmon.globalclock.activity;
 
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.view.MenuItem;
 import android.view.View;
 
 import org.threeten.bp.ZoneId;
@@ -29,9 +35,10 @@ import jp.lovesalmon.globalclock.utils.AdapterGenerater;
 import jp.lovesalmon.globalclock.utils.Debug;
 
 public class TabActivity extends BaseActivity implements
-        ViewPager.OnPageChangeListener {
+        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener {
 
-    private final static String PREF = "pref";
+
+private final static String PREF = "pref";
     private final static String KEY_FIRST_BOOT = "KEY_FIRST_BOOT";
     private ActivityTabBinding binding;
     private final ArrayList<Fragment> fragments = new ArrayList<>();
@@ -59,7 +66,13 @@ public class TabActivity extends BaseActivity implements
 
         // initialize binder and fragments
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tab);
+
+        // set up toolbar
         setSupportActionBar(binding.appBarMain.toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            binding.appBarMain.toolbar.setElevation(0);
+        }
+
         pageTitle = getResources().getStringArray(R.array.tab_titles);
         RecordListFragment recordListFragment = new RecordListFragment();
         recordListFragment.setOnItemClickListener(new RecordListFragment.OnItemClickListener() {
@@ -105,11 +118,6 @@ public class TabActivity extends BaseActivity implements
                 getResources().getColor(R.color.colorPrimary));     // selected text color
 
 
-
-        // initialize drawer menu
-        // ホームアイコン横のHomeAsUpアイコンを有効に。HomeAsUpアイコンは後述のドロワートグルで上書き。
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         //第三引数でHomeAsUpアイコンを指定。
         //第四・第五引数は、String.xmlで適当な文字列を。
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -143,7 +151,9 @@ public class TabActivity extends BaseActivity implements
             public void onDrawerStateChanged(int newState) {
             }
         };
+        mDrawerToggle.syncState();
         binding.drawerLayout.setDrawerListener(mDrawerToggle);
+        binding.navView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -222,5 +232,20 @@ public class TabActivity extends BaseActivity implements
                 compareLocaleDao.insert(compareLocale);
             }
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_libraries:
+            case R.id.nav_about:
+                new AlertDialog.Builder(this)
+                        .setMessage(R.string.drawer_menu_team_summary)
+                        .show();
+                break;
+        }
+
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

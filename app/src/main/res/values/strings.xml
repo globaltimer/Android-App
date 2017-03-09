@@ -1,5 +1,4 @@
 <resources>
-  <string name="app_name">Global Clock</string>
   <string name="search">SEARCH</string>
 
   <string name="now">Now</string>
@@ -13,10 +12,20 @@
   </string-array>
   <string name="title_bar">DONE</string>
 
-
   <string name="drawer_menu_open">open</string>
   <string name="drawer_menu_close">close</string>
+  <string name="drawer_menu_category_etc">Etc</string>
+  <string name="drawer_menu_using_libraries">Using libraries</string>
+  <string name="drawer_menu_about">About us</string>
   <string name="view_empty_locale_button">Add First Locale Here!</string>
   <string name="compare_fragment_toast_empty_record">Add any locale first</string>
   <string name="compare_fragment_toast_tap_locale">Tap any locale for basis locale</string>
+  <string name="drawer_menu_team_summary">
+    <b>LOVE SALMON</b>\n
+    \n
+    <b>HoNKoT</b>\n
+    <b>Saaya</b>\n
+    <b>creaaa</b>\n
+    <b>Yoooo410</b>\n
+  </string>
 </resources>
