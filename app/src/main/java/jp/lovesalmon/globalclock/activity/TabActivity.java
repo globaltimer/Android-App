@@ -1,5 +1,6 @@
 package jp.lovesalmon.globalclock.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -12,7 +13,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -238,10 +238,11 @@ private final static String PREF = "pref";
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_libraries:
+                startActivity(new Intent(this, LibsActivity.class));
+                break;
+
             case R.id.nav_about:
-                new AlertDialog.Builder(this)
-                        .setMessage(R.string.drawer_menu_team_summary)
-                        .show();
+                startActivity(new Intent(this, AboutActivity.class));
                 break;
         }
 

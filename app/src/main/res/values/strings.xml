@@ -23,9 +23,9 @@
   <string name="drawer_menu_team_summary">
     <b>LOVE SALMON</b>\n
     \n
-    <b>HoNKoT</b>\n
-    <b>Saaya</b>\n
-    <b>creaaa</b>\n
-    <b>Yoooo410</b>\n
+    <a href="https://github.com/HoNKoT">HoNKoT</a>\n
+    <a href="https://github.com/Saaya">Saaya</a>\n
+    <a href="https://github.com/creaaa">creaaa</a>\n
+    <a href="https://github.com/Yoooo410">Yoooo410</a>\n
   </string>
 </resources>

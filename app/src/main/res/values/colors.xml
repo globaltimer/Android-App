@@ -6,4 +6,5 @@
     <color name="colorRouge">#d95b5b</color>
     <color name="colorLightGray">#f6f6f6</color>
     <color name="colorGray">#cdcdcd</color>
+    <color name="colorTrans">#77000000</color>
 </resources>
