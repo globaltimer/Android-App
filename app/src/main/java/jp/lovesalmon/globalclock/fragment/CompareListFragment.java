@@ -246,9 +246,10 @@ public class CompareListFragment extends Fragment {
             if (offsetMinutes == 0) {
                 binding.futureMsgTextView.setText(R.string.now);
             } else {
-                int day = Math.abs(offsetMinutes / (60 * 24));
-                int hour = Math.abs((offsetMinutes - day * (60 * 24)) / 60);
-                int minutes = Math.abs((offsetMinutes - day * (60 * 24)) % 60);
+                int absOffsetMinutes = Math.abs(offsetMinutes);
+                int day = absOffsetMinutes / (60 * 24);
+                int hour = (absOffsetMinutes - day * (60 * 24)) / 60;
+                int minutes = (absOffsetMinutes - day * (60 * 24)) % 60;
 
                 StringBuilder sb = new StringBuilder();
                 if (day != 0) {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/drawer_menu_category_etc">
+        <menu>
+            <item
+                android:id="@+id/nav_libraries"
+                android:title="@string/drawer_menu_using_libraries"/>
+            <item
+                android:id="@+id/nav_about"
+                android:title="@string/drawer_menu_about"/>
+        </menu>
+    </item>
+
+</menu>

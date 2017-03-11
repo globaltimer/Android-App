@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="define_androidorma"></string>
+    <!-- Author section -->
+    <string name="library_androidorma_author">FUJI Goro (gfx)</string>
+    <string name="library_androidorma_authorWebsite">https://github.com/gfx/Android-Orma</string>
+    <!-- Library section -->
+    <string name="library_androidorma_libraryName">Android Orma</string>
+    <string name="library_androidorma_libraryDescription">Orma is an ORM (Object-Relation Mapper) for Android SQLiteDatabase, generating helper classes at compile time with annotation processing, inspired in ActiveAndroid, GreenDAO, and Realm.  The interface of Orma is very simple and easy to use, as the author respects the Larry Wall\'s wisdom:  Easy things should be easy, and hard things should be possible — Larry Wall</string>
+    <string name="library_androidorma_libraryWebsite">https://github.com/gfx/Android-Orma</string>
+    <string name="library_androidorma_libraryVersion">4.2.0</string>
+    <!-- OpenSource section -->
+    <string name="library_androidorma_isOpenSource">true</string>
+    <string name="library_androidorma_repositoryLink">https://github.com/gfx/Android-Orma</string>
+    <!-- ClassPath for autoDetect section -->
+    <string name="library_androidorma_classPath">com.github.gfx.android.orma</string>
+    <!-- License section -->
+    <string name="library_androidorma_licenseId">apache_2_0</string>
+    <!-- Custom variables section -->
+</resources>

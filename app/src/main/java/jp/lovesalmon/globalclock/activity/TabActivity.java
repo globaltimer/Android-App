@@ -1,11 +1,20 @@
 package jp.lovesalmon.globalclock.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.MenuItem;
+import android.view.View;
 
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
@@ -26,15 +35,18 @@ import jp.lovesalmon.globalclock.utils.AdapterGenerater;
 import jp.lovesalmon.globalclock.utils.Debug;
 
 public class TabActivity extends BaseActivity implements
-        ViewPager.OnPageChangeListener {
+        ViewPager.OnPageChangeListener, NavigationView.OnNavigationItemSelectedListener {
 
-    private final static String PREF = "pref";
+
+private final static String PREF = "pref";
     private final static String KEY_FIRST_BOOT = "KEY_FIRST_BOOT";
     private ActivityTabBinding binding;
     private final ArrayList<Fragment> fragments = new ArrayList<>();
     private String[] pageTitle;
     private final int PAGE_COMPARE = 0;
     private final int PAGE_RECORD_LIST = 1;
+    private DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Inject
     CompareLocaleDao compareLocaleDao;
@@ -54,12 +66,19 @@ public class TabActivity extends BaseActivity implements
 
         // initialize binder and fragments
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tab);
+
+        // set up toolbar
+        setSupportActionBar(binding.appBarMain.toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            binding.appBarMain.toolbar.setElevation(0);
+        }
+
         pageTitle = getResources().getStringArray(R.array.tab_titles);
         RecordListFragment recordListFragment = new RecordListFragment();
         recordListFragment.setOnItemClickListener(new RecordListFragment.OnItemClickListener() {
             @Override
             public void onItemClick(CompareLocale compareLocale) {
-                binding.pager.setCurrentItem(PAGE_COMPARE);
+                binding.appBarMain.activityMain.pager.setCurrentItem(PAGE_COMPARE);
             }
         });
         fragments.add(PAGE_COMPARE, new CompareListFragment());
@@ -84,19 +103,57 @@ public class TabActivity extends BaseActivity implements
         };
 
         // initialize view pager
-        binding.pager.setAdapter(adapter);
-        binding.pager.addOnPageChangeListener(this);
-        binding.pager.setCurrentItem(PAGE_RECORD_LIST); // as default page
+        binding.appBarMain.activityMain.pager.setAdapter(adapter);
+        binding.appBarMain.activityMain.pager.addOnPageChangeListener(this);
+        binding.appBarMain.activityMain.pager.setCurrentItem(PAGE_RECORD_LIST); // as default page
 
         // set view pager to tab
-        binding.tabs.setupWithViewPager(binding.pager);
-        binding.tabs.setSelectedTabIndicatorColor(
+        binding.appBarMain.activityMain.tabs.setupWithViewPager(
+                binding.appBarMain.activityMain.pager);
+        binding.appBarMain.activityMain.tabs.setSelectedTabIndicatorColor(
                 getResources().getColor(R.color.colorPrimary));     // bar color
-        binding.tabs.setSelectedTabIndicatorHeight(10);             // bar height
-        binding.tabs.setTabTextColors(
+        binding.appBarMain.activityMain.tabs.setSelectedTabIndicatorHeight(10);             // bar height
+        binding.appBarMain.activityMain.tabs.setTabTextColors(
                 getResources().getColor(R.color.colorGray),         // normal text color
                 getResources().getColor(R.color.colorPrimary));     // selected text color
 
+
+        //第三引数でHomeAsUpアイコンを指定。
+        //第四・第五引数は、String.xmlで適当な文字列を。
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                binding.drawerLayout,
+                binding.appBarMain.toolbar,
+                R.string.drawer_menu_open,
+                R.string.drawer_menu_close) {
+
+            //閉じた時に呼ばれる
+            @Override
+            public void onDrawerClosed(View drawerView) {
+            }
+
+            //開いた時に呼ばれる
+            @Override
+            public void onDrawerOpened(View drawerView) {
+            }
+
+            //アニメーションの処理。Overrideする場合はスーパークラスの同メソッドを呼ぶ。
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+
+            //状態が変化した時に呼ばれる。
+            // 表示/閉じ済み -> 0
+            // ドラッグ中 -> 1
+            // ドラッグを開放た後のアニメーション中 ->2
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        };
+        mDrawerToggle.syncState();
+        binding.drawerLayout.setDrawerListener(mDrawerToggle);
+        binding.navView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -106,7 +163,7 @@ public class TabActivity extends BaseActivity implements
     @Override
     public void onPageSelected(int position) {
         FragmentPagerAdapter adapter =
-                (FragmentPagerAdapter) binding.pager.getAdapter();
+                (FragmentPagerAdapter) binding.appBarMain.activityMain.pager.getAdapter();
 
         if (position == PAGE_COMPARE) {
             // initialize compare page
@@ -175,5 +232,21 @@ public class TabActivity extends BaseActivity implements
                 compareLocaleDao.insert(compareLocale);
             }
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_libraries:
+                startActivity(new Intent(this, LibsActivity.class));
+                break;
+
+            case R.id.nav_about:
+                startActivity(new Intent(this, AboutActivity.class));
+                break;
+        }
+
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
