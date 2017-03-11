@@ -30,4 +30,14 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
+
+    <style name="position">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+    <style name="name">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:color">@android:color/darker_gray</item>
+        <item name="android:layout_marginBottom">12dp</item>
+    </style>
 </resources>

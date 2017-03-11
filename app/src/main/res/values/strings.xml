@@ -21,11 +21,11 @@
   <string name="compare_fragment_toast_empty_record">Add any locale first</string>
   <string name="compare_fragment_toast_tap_locale">Tap any locale for basis locale</string>
   <string name="drawer_menu_team_summary">
-    <b>LOVE SALMON</b>\n
+    <b>team LOVE SALMON</b>\n
     \n
-    <a href="https://github.com/HoNKoT">HoNKoT</a>\n
-    <a href="https://github.com/Saaya">Saaya</a>\n
-    <a href="https://github.com/creaaa">creaaa</a>\n
-    <a href="https://github.com/Yoooo410">Yoooo410</a>\n
+    Programmer / Project Leader : <a href="https://github.com/HoNKoT">HoNKoT</a>\n
+    Programmer / Designer : <a href="https://github.com/Saaya">Saaya</a>\n
+    Programmer <a href="https://github.com/creaaa">creaaa</a>\n
+    Programmer <a href="https://github.com/Yoooo410">Yoooo410</a>\n
   </string>
 </resources>
