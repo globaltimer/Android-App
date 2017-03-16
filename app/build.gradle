@@ -7,10 +7,10 @@ android {
         applicationId "jp.lovesalmon.globalclock"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
-        versionName "Anko"
+        versionCode 2
+        versionName "Aji"
         resValue "string", "app_name", "Global Clock"
-        resValue "string", "app_version", "version Anko"
+        resValue "string", "app_version", "version Aji"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
