@@ -1,6 +1,5 @@
 package jp.lovesalmon.globalclock.model;
 
-import android.content.Context;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 
@@ -12,10 +11,6 @@ import com.github.gfx.android.orma.annotation.Table;
 
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZonedDateTime;
-
-import java.util.TimeZone;
-
-import jp.lovesalmon.globalclock.utils.AdapterGenerater;
 
 @Table
 public class CompareLocale implements ListBindingInterface {
@@ -46,18 +41,15 @@ public class CompareLocale implements ListBindingInterface {
 
     private int offsetMins = 0;
 
-    public CompareLocale() {
-
-    }
-
-    public CompareLocale(Context context) {
-        this.basis = false;
-        String gmt = TimeZone.getDefault().getDisplayName(false, TimeZone.SHORT);
-        this.zonedDateTime = ZonedDateTime.now(ZoneId.of(gmt))
-                    .withSecond(0).withNano(0);
-        this.gmtId = AdapterGenerater.getIdByGMT(context, gmt);
-        this.taskName = "";
-        this.locationName = gmtId;
+    public static CompareLocale getInstance() {
+        CompareLocale newInstance = new CompareLocale();
+        newInstance.basis = false;
+        newInstance.zonedDateTime = ZonedDateTime.now(ZoneId.systemDefault())
+                .withSecond(0).withNano(0);
+        newInstance.gmtId = ZoneId.systemDefault().getId();
+        newInstance.taskName = "";
+        newInstance.locationName = newInstance.gmtId;
+        return newInstance;
     }
 
     @Getter

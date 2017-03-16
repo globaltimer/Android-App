@@ -210,7 +210,7 @@ private final static String PREF = "pref";
             String id = (String)map.get("id");
 
             if (defaultIds.contains(id)) {
-                CompareLocale locale = new CompareLocale(this);
+                CompareLocale locale = CompareLocale.getInstance();
                 locale.setLocationName(name);
                 locale.setGmtId(id);
                 ZonedDateTime newOne = locale.getZonedDateTime().withZoneSameInstant(ZoneId.of(gmt));

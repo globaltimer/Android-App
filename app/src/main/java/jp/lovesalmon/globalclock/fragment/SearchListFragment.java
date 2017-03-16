@@ -167,7 +167,7 @@ public class SearchListFragment extends Fragment {
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             // set locale.
             TmpTimeZone tmpTimeZone = getItem(position);
-            CompareLocale locale = new CompareLocale(getActivity());
+            CompareLocale locale = CompareLocale.getInstance();
             locale.setLocationName(tmpTimeZone.getName());
             locale.setGmtId(tmpTimeZone.getLocaleId());
             ZonedDateTime newOne = locale.getZonedDateTime().withZoneSameInstant(ZoneId.of(tmpTimeZone.getGmt()));
