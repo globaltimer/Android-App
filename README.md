@@ -17,4 +17,12 @@ Show the time in your location on the timer
 
 # outline image
 
-![demo1](https://lh3.googleusercontent.com/JA1gehQBZXVhIai2CGJjRK7Q1gtjCOgelUYnutrqEKDvIXz9evVJPgzInm5CV04nD42p=h900) ![demo2](https://lh3.googleusercontent.com/MSyha2dV5Xr4oxTp_hi8OhveczVp4yzi6W5hZ_xxlk3UoWTApYdNDom43BvbwkQZGOx7=h900) ![demo3](https://lh3.googleusercontent.com/tWClmmW3fNvvxxtrRGJKWquJDYJ3vWaVHmSIe1U0iIAJoqT1mwB_9P8rrMQKdZvkIyM=h900)
+![demo1]() ![demo2]() ![demo3]()
+
+
+
+<div align="center">
+	<img src="https://lh3.googleusercontent.com/JA1gehQBZXVhIai2CGJjRK7Q1gtjCOgelUYnutrqEKDvIXz9evVJPgzInm5CV04nD42p=h900" width="200px" height="356px" style="margin-right: 20px">
+	<img src="https://lh3.googleusercontent.com/MSyha2dV5Xr4oxTp_hi8OhveczVp4yzi6W5hZ_xxlk3UoWTApYdNDom43BvbwkQZGOx7=h900" width="200px" height="356px" style="margin-left: 20px; margin-right: 20px">
+	<img src="https://lh3.googleusercontent.com/tWClmmW3fNvvxxtrRGJKWquJDYJ3vWaVHmSIe1U0iIAJoqT1mwB_9P8rrMQKdZvkIyM=h900" width="200px" height="356px" style="margin-left: 20px">
+</div>
