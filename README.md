@@ -1,10 +1,11 @@
 
-[![Platform](http://img.shields.io/badge/platform-ios-blue.svg?style=flat)](https://developer.apple.com/iphone/index.action)
-![Language](https://img.shields.io/badge/language-java-brightgreen.svg)
+[![Platform](https://img.shields.io/badge/platform-android-blue.svg)](https://www.android.com/)
+[![Language](https://img.shields.io/badge/language-java-brightgreen.svg)](https://www.oracle.com/java/index.html)
 # Global Clock v1.0 Released!
-This open source project for an Android App, GScheduler.<br>
+This open source project for an Android App, Global Clock *Changed app name during process.<br>
 The App works like timer and reminder for the person who works across all over the world.
 
+⏰ What time is it in another country in 1 month? Check that out with this app! 🌐
 
 ## Google Play
 https://play.google.com/store/apps/details?id=jp.lovesalmon.globalclock&hl=en
@@ -19,8 +20,6 @@ List up<br>
 Show the time in your location on the timer
 
 # outline image
-
-
 
 <div align="center">
 	<img src="https://lh3.googleusercontent.com/JA1gehQBZXVhIai2CGJjRK7Q1gtjCOgelUYnutrqEKDvIXz9evVJPgzInm5CV04nD42p=h900" width="200px" height="356px" style="margin-right: 20px">
