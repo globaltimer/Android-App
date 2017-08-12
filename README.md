@@ -17,8 +17,6 @@ Show the time in your location on the timer
 
 # outline image
 
-![demo1]() ![demo2]() ![demo3]()
-
 
 
 <div align="center">
