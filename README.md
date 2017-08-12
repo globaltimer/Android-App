@@ -1,6 +1,6 @@
 
 [![Platform](http://img.shields.io/badge/platform-ios-blue.svg?style=flat)](https://developer.apple.com/iphone/index.action)
-[![Language](https://img.shields.io/badge/language-java-brightgreen.svg)
+![Language](https://img.shields.io/badge/language-java-brightgreen.svg)
 # Global Clock v1.0 Released!
 This open source project for an Android App, GScheduler.<br>
 The App works like timer and reminder for the person who works across all over the world.
